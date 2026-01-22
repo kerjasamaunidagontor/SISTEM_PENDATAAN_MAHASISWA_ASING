@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sistem Kerjasama Universitas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/cs/style.css" />
+    <!-- di dalam <head> -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/img/logo unida.png"
+    />
+  </head>
+
+  <body class="bg-gray-50 overflow-x-hidden">
+
+  <!-- OVERLAY (MOBILE) -->
+  <div
+    id="sidebarOverlay"
+    onclick="toggleSidebar()"
+    class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"
+  ></div>
+
+  <!-- SIDEBAR -->
+  <aside
+    id="sidebar"
+    class="fixed top-0 left-0 h-screen w-64
+           bg-gradient-to-b from-purple-900 to-purple-700
+           text-white z-40 overflow-y-auto
+           transform -translate-x-full md:translate-x-0
+           transition-transform duration-300"
+  >
+
+    <!-- BRAND -->
+        <a
+          href="#"
+          onclick="loadPage('dashboard')"
+          class="block p-5 border-b border-purple-600 hover:bg-purple-800/30 transition"
+        >
+          <div class="flex items-center gap-3">
+            <img
+              src="assets/img/logo unida.png"
+              alt="Logo Universitas Darussalam Gontor"
+              class="w-10 h-10 object-contain"
+            />
+            <div class="leading-tight">
+              <div class="font-bold text-lg">KERJASAMA</div>
+              <p class="text-sm font-normal opacity-80">
+                Universitas Darussalam Gontor
+              </p>
+            </div>
+          </div>
+        </a>
+
+        <!-- NAVIGATION -->
+        <nav class="p-4 space-y-2 text-sm">
+          <a
+            onclick="loadPage('dashboard')"
+            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
+            >📊 Dashboard</a
+          >
+
+          <a
+            onclick="loadPage('kerjasama')"
+            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
+            >📄 Kerjasama</a
+          >
+
+          <a
+            onclick="loadPage('kegiatan')"
+            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
+            >📅 Kegiatan</a
+          >
+
+          <a
+            onclick="loadPage('mitra')"
+            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
+            >🏢 Mitra</a
+          >
+        </nav>
+      </aside>
+
+      <!-- MAIN -->
+      <!-- MAIN -->
+  <main class="md:ml-64 min-h-screen">
+
+    <!-- TOPBAR -->
+    <header class="bg-white shadow px-4 py-3 flex items-center gap-3">
+
+      <!-- HAMBURGER (MOBILE) -->
+      <button
+        onclick="toggleSidebar()"
+        class="md:hidden text-purple-700 text-2xl focus:outline-none"
+      >
+        ☰
+      </button>
+
+      <h1 id="page-title" class="text-xl font-semibold">
+        Dashboard
+      </h1>
+    </header>
+
+    <section id="app-content" class="p-6"></section>
+  </main>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/kerjasama.js"></script>
+    <script src="assets/js/kegiatan.js"></script>
+    <script src="assets/js/mitra.js"></script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<div class="flex gap-4 mb-4">
+  <input
+    id="mitra-search"
+    oninput="applyMitraFilter()"
+    placeholder="Cari mitra / kegiatan / PJ..."
+    class="border rounded-lg px-3 py-2 w-80"
+  />
+
+  <select
+    id="mitra-filter-jenis"
+    onchange="applyMitraFilter()"
+    class="border rounded-lg px-3 py-2"
+  >
+    <option value="">Semua Jenis Mitra</option>
+    <option value="Lokal">Lokal</option>
+    <option value="Nasional">Nasional</option>
+    <option value="Internasional">Internasional</option>
+  </select>
+</div>
+
+<div class="flex flex-col gap-6">
+  <h2 class="text-lg font-semibold">Data Mitra</h2>
+
+  <div class="bg-white rounded-xl shadow overflow-x-auto">
+    <table class="w-full text-sm table-auto">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-3 text-center whitespace-nowrap">Mitra</th>
+          <th class="p-3 w-40 text-left">Tingkat Kerjasama</th>
+          <th class="p-3 w-56 text-left">Jumlah Kegiatan</th>
+          <th class="p-3 text-center whitespace-nowrap">Jenis Mitra</th>
+          <th class="p-3 text-center whitespace-nowrap">Detail</th>
+        </tr>
+      </thead>
+
+      <tbody id="mitra-body"></tbody>
+    </table>
+  </div>
+</div>

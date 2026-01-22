@@ -1,0 +1,238 @@
+<div class="flex flex-col gap-6">
+  <!-- HEADER -->
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+  >
+    <h2 class="text-lg font-semibold">Kegiatan Kerjasama</h2>
+
+    <div class="flex gap-2">
+      <select
+        id="filter-kegiatan"
+        onchange="applyKegiatanFilter()"
+        class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500"
+      >
+        <option value="">Semua Jenis</option>
+        <option value="Pendidikan">Pendidikan</option>
+        <option value="Penelitian">Penelitian</option>
+        <option value="Pengabdian Kepada Masyarakat">
+          Pengabdian Kepada Masyarakat
+        </option>
+      </select>
+
+      <input
+        type="text"
+        id="search-kegiatan"
+        onkeyup="applyKegiatanFilter()"
+        placeholder="Cari kegiatan..."
+        class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500"
+      />
+
+      <button
+        onclick="openKegiatanForm()"
+        class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700"
+      >
+        + Tambah
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="bg-white rounded-xl shadow overflow-x-auto">
+    <table class="w-full text-sm table-fixed">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-3 text-left w-40">Unit Pelaksana</th>
+          <th class="p-3 text-left w-24">Jenis</th>
+          <th class="p-3 text-left w-40">Bentuk Kegiatan</th>
+          <th class="p-3 text-left w-24">Tingkat</th>
+          <th class="p-3 text-left w-32">Tanggal</th>
+          <th class="p-3 text-left w-64">Judul Kerjasama</th>
+          <th class="p-3 text-left w-40">Mitra</th>
+          <th class="p-3 text-left w-32">Keterangan</th>
+
+          <!-- AKSI -->
+          <th
+            class="p-3 text-center w-20 whitespace-nowrap sticky right-0 bg-gray-100 z-20"
+          >
+            Aksi
+          </th>
+        </tr>
+      </thead>
+
+      <tbody id="kegiatan-body"></tbody>
+    </table>
+  </div>
+  <!-- MODAL KEGIATAN -->
+  <!-- MODAL KEGIATAN -->
+  <div
+    id="kegiatan-modal"
+    class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50 px-4"
+  >
+    <div
+      class="bg-white rounded-xl w-full max-w-5xl max-h-[90vh] flex flex-col"
+    >
+      <!-- HEADER -->
+      <div class="px-6 py-4 border-b">
+        <h3 class="font-semibold text-lg">Tambah Kegiatan Kerjasama</h3>
+        <input type="hidden" id="kegiatanIndex" />
+      </div>
+
+      <!-- BODY (SCROLLABLE) -->
+      <div class="px-6 py-4 overflow-y-auto flex-1">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div class="relative" id="mitra-wrapper">
+            <input
+              id="k-no-search"
+              class="input"
+              placeholder="Cari Mitra Kerjasama"
+              oninput="filterMitraDropdown()"
+              onclick="toggleMitraDropdown(true)"
+            />
+
+            <div
+              id="k-no-dropdown"
+              class="absolute z-50 bg-white border rounded-lg mt-1 w-full max-h-52 overflow-y-auto hidden"
+            ></div>
+          </div>
+
+          <input type="hidden" id="k-no" />
+
+          <input id="k-mitra" class="input" placeholder="Mitra" />
+          <input type="date" id="k-tanggal" class="input" />
+
+          <select id="k-tingkat" class="input">
+            <option value="">Tingkat Kerjasama</option>
+            <option>Internasional</option>
+            <option>Nasional</option>
+            <option>Lokal</option>
+          </select>
+
+          <select id="k-jenis-mitra" class="input">
+            <option value="">Jenis Mitra</option>
+            <option>Perguruan Tinggi</option>
+            <option>Industri</option>
+            <option>Pemerintah</option>
+            <option>Lainnya</option>
+          </select>
+
+          <select id="k-jenis-dokumen" class="input">
+            <option value="">Jenis Dokumen</option>
+            <option>MoU (Memorandum of Understanding)</option>
+            <option>MoA (Memorandum of Agreement)</option>
+            <option>IA (Implementation Arrangement)</option>
+          </select>
+
+          <input id="k-bentuk" class="input" placeholder="Bentuk Kegiatan" />
+          <input id="k-bidang" class="input" placeholder="Bidang" />
+          <input id="k-pendanaan" class="input" placeholder="Pendanaan" />
+          <input
+            id="k-fakultas"
+            class="input"
+            placeholder="Fakultas / Satker"
+          />
+          <input id="k-pj" class="input" placeholder="Penanggung Jawab (PJ)" />
+          <input type="number" id="k-tahun" class="input" placeholder="Tahun" />
+
+          <select id="k-status" class="input">
+            <option value="">Status</option>
+            <option>Aktif</option>
+            <option>Selesai</option>
+            <option>Tidak Aktif</option>
+          </select>
+
+          <select id="k-simkerma" class="input">
+            <option value="">SIMKERMA</option>
+            <option>Sudah</option>
+            <option>Belum</option>
+          </select>
+
+          <select id="k-cek-laporan" class="input">
+            <option value="">Cek Laporan</option>
+            <option>Sudah</option>
+            <option>Belum</option>
+          </select>
+
+          <input
+            id="k-link-simkerma"
+            class="input md:col-span-2"
+            placeholder="Link SIMKERMA"
+          />
+          <input
+            id="k-laporan"
+            class="input md:col-span-2"
+            placeholder="Link Laporan Kegiatan"
+          />
+          <input
+            id="k-dokumen"
+            class="input md:col-span-2"
+            placeholder="Link Dokumen Kegiatan"
+          />
+
+          <textarea
+            id="k-deskripsi"
+            class="input md:col-span-3"
+            placeholder="Deskripsi Kegiatan"
+          ></textarea>
+
+          <textarea
+            id="k-catatan"
+            class="input md:col-span-3"
+            placeholder="Catatan"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="px-6 py-4 border-t flex justify-end gap-2">
+        <button
+          onclick="closeKegiatanForm()"
+          class="px-4 py-2 border rounded-lg"
+        >
+          Batal
+        </button>
+        <button
+          onclick="saveKegiatan()"
+          class="px-4 py-2 bg-purple-600 text-white rounded-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    id="kegiatan-detail-modal"
+    class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50 px-4"
+  >
+    <div
+      class="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6"
+    >
+      <h3 class="font-semibold text-lg mb-4">Detail Kegiatan</h3>
+
+      <div
+        id="kegiatan-detail-content"
+        class="grid grid-cols-2 gap-3 text-sm"
+      ></div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button
+          onclick="closeKegiatanDetail()"
+          class="border px-4 py-2 rounded"
+        >
+          Tutup
+        </button>
+        <button
+          onclick="editFromDetail()"
+          class="bg-purple-600 text-white px-4 py-2 rounded"
+        >
+          Edit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="flex justify-between items-center text-sm">
+    <span id="kegiatan-info" class="text-gray-600"></span>
+    <div id="kegiatan-pagination" class="flex gap-1"></div>
+  </div>
+</div>
