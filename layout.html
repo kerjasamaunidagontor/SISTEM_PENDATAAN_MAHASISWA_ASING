@@ -55,42 +55,38 @@
             </div>
           </div>
         </a>
+        <!-- USER INFO -->
+<div id="userInfo" class="px-5 py-4 border-b border-purple-600">
+  <div class="text-sm font-semibold" id="sidebarUsername">-</div>
+  <div class="text-xs opacity-80 capitalize" id="sidebarRole">-</div>
+</div>
+
 
         <!-- NAVIGATION -->
         <nav class="p-4 space-y-2 text-sm">
-          <a
-            onclick="loadPage('dashboard')"
-            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
-            >📊 Dashboard</a
-          >
-
-          <a
-            onclick="loadPage('kerjasama')"
-            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
-            >📄 Kerjasama</a
-          >
-
-          <a
-            onclick="loadPage('kegiatan')"
-            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
-            >📅 Kegiatan</a
-          >
-
-          <a
-            onclick="loadPage('mitra')"
-            class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition"
-            >🏢 Mitra</a
-          >
-        </nav>
-      <div class="p-4 border-t border-purple-600 mt-auto">
-  <a
-    onclick="loadPage('login')"
-    class="flex items-center gap-2 p-3 rounded
-           bg-purple-800/60 hover:bg-purple-900 transition text-sm"
-  >
-    🔐 Login
+  <a onclick="loadPage('dashboard')" class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition">
+    📊 Dashboard
   </a>
-</div> 
+
+  <a data-admin onclick="loadPage('kerjasama')" class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition">
+    📄 Kerjasama
+  </a>
+
+  <a data-admin onclick="loadPage('kegiatan')" class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition">
+    📅 Kegiatan
+  </a>
+
+  <a onclick="loadPage('mitra')" class="menu-link flex p-3 rounded hover:bg-purple-800/40 transition">
+    🏢 Mitra
+  </a>
+</nav>
+
+<div class="p-4 border-t border-purple-600 mt-auto">
+  <a onclick="logout()" class="flex items-center gap-2 p-3 rounded bg-red-600/80 hover:bg-red-700 transition text-sm">
+    🚪 Logout
+  </a>
+</div>
+
       </aside>
 
       <!-- MAIN -->
@@ -115,7 +111,7 @@
 
     <section id="app-content" class="p-6"></section>
   </main>
-    </div>
+    
 
     <script src="assets/js/api.js"></script>
     <script src="assets/js/app.js"></script>
