@@ -14,6 +14,26 @@ function checkAuth() {
 function getRole() {
   return localStorage.getItem("role"); // admin | user
 }
+function loadUserSidebar() {
+  const username = localStorage.getItem("username");
+  const role = localStorage.getItem("role");
+
+  if (!username || !role) return;
+
+  document.getElementById("sidebarUsername").innerText = username;
+
+  const roleBadge = document.getElementById("sidebarRole");
+  roleBadge.innerText = role.toUpperCase();
+
+  // warna badge
+  if (role === "admin") {
+    roleBadge.className =
+      "text-xs px-2 py-0.5 rounded bg-purple-600 text-white";
+  } else {
+    roleBadge.className =
+      "text-xs px-2 py-0.5 rounded bg-blue-500 text-white";
+  }
+}
 
 function runPageScript(page) {
   const role = getRole();
@@ -81,6 +101,27 @@ function formatTanggal(val) {
   const d = new Date(val);
   return isNaN(d) ? "-" : d.toLocaleDateString("id-ID");
 }
+let idleTimer;
+const IDLE_LIMIT = 10 * 60 * 1000; // 10 menit
+/* ============================
+  untuk timer logout otomatis
+============================== */
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+
+  idleTimer = setTimeout(() => {
+    alert("Session habis karena tidak ada aktivitas.");
+    logout();
+  }, IDLE_LIMIT);
+}
+
+function initIdleLogout() {
+  ["mousemove", "keydown", "click", "scroll"].forEach(event => {
+    document.addEventListener(event, resetIdleTimer);
+  });
+
+  resetIdleTimer();
+}
 
 /* ==============================
    INIT
@@ -88,7 +129,9 @@ function formatTanggal(val) {
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
   applyRoleUI();
+  loadUserSidebar();
   renderUserInfo();   // 👤 tampilkan user
+  initIdleLogout();
   loadPage("dashboard");
 });
 
