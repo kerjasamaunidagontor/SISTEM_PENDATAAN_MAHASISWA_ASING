@@ -1,12 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Loading...</title>
-</head>
-<body>
-  <script>
-    window.location.replace("layout.html");
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sistem Pendataan Mahasiswa Asing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+    <!-- jsVectorMap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+
+    <!-- FullCalendar -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <!-- untuk import penerimaan -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/img/logo.png"
+    />
+  </head>
+
+  <body class="bg-gray-50 overflow-x-hidden">
+    <!-- OVERLAY (MOBILE) -->
+    <div
+      id="sidebarOverlay"
+      onclick="toggleSidebar()"
+      class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"
+    ></div>
+
+    <!-- SIDEBAR -->
+    <aside
+      id="sidebar"
+      class="fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-blue-700 to-blue-900 text-white z-40 overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300"
+    >
+      <!-- BRAND -->
+      <a
+        href="#"
+        onclick="loadPage('dashboard')"
+        class="block p-5 border-b border-blue-600 hover:bg-blue-800/30 transition"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="assets/img/logo.png"
+            alt="Logo Universitas"
+            class="w-10 h-10 object-contain bg-white rounded-full p-1"
+          />
+          <div class="leading-tight">
+            <div class="font-bold text-lg">INTERNATIONAL</div>
+            <p class="text-sm font-normal opacity-80">Student Data System</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- USER PROFILE -->
+      <div
+        class="px-4 py-5 border-b border-blue-500/40 flex items-center gap-3"
+      >
+        <img
+          src="assets/img/iconuser.png"
+          alt="avatar"
+          class="w-11 h-11 rounded-full border-2 border-white/40"
+        />
+        <div class="leading-tight">
+          <p id="sidebarUsername" class="font-semibold text-sm text-white">
+            Admin
+          </p>
+          <span
+            id="sidebarRole"
+            class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800"
+            >Administrator</span
+          >
+        </div>
+      </div>
+
+      <!-- NAVIGATION -->
+      <nav class="p-4 space-y-2 text-sm">
+        <a
+          onclick="loadPage('dashboard')"
+          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
+        >
+          📊 Dashboard
+        </a>
+        <a
+          onclick="loadPage('datamahasiswa')"
+          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
+        >
+          👥 Data Mahasiswa
+        </a>
+        <a
+          onclick="loadPage('mobility')"
+          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
+        >
+          ✈️ Mobilitas Internasional
+        </a>
+        <a
+          onclick="loadPage('penerimaan')"
+          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
+        >
+          📥 Data Penerimaan Baru
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="md:ml-64 min-h-screen">
+      <!-- TOPBAR / HEADER -->
+      <header
+        class="bg-white/80 backdrop-blur-md shadow-sm px-6 py-3 flex items-center justify-between sticky top-0 z-20 border-b"
+      >
+        <!-- LEFT -->
+        <div class="flex items-center gap-3">
+          <button
+            onclick="toggleSidebar()"
+            class="md:hidden text-blue-700 text-2xl focus:outline-none"
+          >
+            ☰
+          </button>
+          <div>
+            <h1
+              id="page-title"
+              class="text-2xl md:text-2xl font-bold text-gray-800 leading-tight"
+            >
+              Dashboard
+            </h1>
+            <p class="text-sm text-gray-500">
+              Sistem Pendataan Mahasiswa Asing
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <button
+              onclick="toggleUserMenu()"
+              class="flex items-center gap-2 focus:outline-none"
+            >
+              <img
+                src="assets/img/iconuser.png"
+                alt="User"
+                class="w-8 h-8 rounded-full border"
+              />
+              <div class="hidden sm:block text-sm text-left">
+                <p
+                  id="headerUsername"
+                  class="font-medium text-gray-700 leading-tight"
+                >
+                  Admin
+                </p>
+                <p id="headerRole" class="text-xs text-gray-500 leading-tight">
+                  Administrator
+                </p>
+              </div>
+              <span class="text-gray-500">▾</span>
+            </button>
+            <div
+              id="userDropdown"
+              class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border text-sm z-50"
+            >
+              <a href="#" class="block px-4 py-2 hover:bg-gray-100"
+                >👤 Profile</a
+              >
+              <button
+                onclick="logout()"
+                class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600"
+              >
+                🚪 Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- DYNAMIC CONTENT -->
+      <section id="app-content" class="p-6"></section>
+    </main>
+
+    <!-- GLOBAL LOADING -->
+    <div
+      id="global-loading"
+      class="fixed inset-0 bg-black/40 hidden items-center justify-center z-[9999]"
+    >
+      <div
+        class="bg-white rounded-xl px-6 py-5 flex items-center gap-4 shadow-lg"
+      >
+        <svg
+          class="animate-spin h-6 w-6 text-blue-600"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"
+          ></path>
+        </svg>
+        <span id="global-loading-text" class="text-sm font-medium"
+          >Memproses...</span
+        >
+      </div>
+    </div>
+
+    <!-- CORE JS -->
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/datamahasiswa.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+
+    <script src="assets/js/mobility.js"></script>
+    <script src="assets/js/penerimaan.js"></script>
+  </body>
 </html>
