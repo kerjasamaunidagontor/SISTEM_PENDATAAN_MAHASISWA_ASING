@@ -1544,3 +1544,21 @@ textarea,
   color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
+/* 🔥 FORCE overlay benar-benar hilang saat hidden */
+#sidebarOverlay.hidden,
+#global-loading.hidden {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 🔥 Pastikan konten utama tidak pernah kena opacity */
+main,
+#app-content,
+.table-container,
+.card,
+table {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
