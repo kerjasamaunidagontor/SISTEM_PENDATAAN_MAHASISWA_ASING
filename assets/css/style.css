@@ -52,18 +52,6 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
-/* 🌙 Dark Mode Support (Optional) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-body: #0f172a;
-    --bg-card: #1e293b;
-    --bg-hover: #334155;
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --border-color: #334155;
-  }
-}
-
 /* 🔄 Reset & Base Styles */
 *,
 *::before,
@@ -1544,3 +1532,4 @@ textarea,
   color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
+
