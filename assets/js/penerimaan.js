@@ -188,6 +188,7 @@ function initPenerimaan() {
 
   // 🔥 LOAD DATA REAL
   loadAdmissionsFromServer();
+  
 }
 
 // Update stats cards
@@ -227,56 +228,73 @@ function renderAdmissionTable() {
   });
 
   tbody.innerHTML =
-    filtered
-      .map(
-        (a, idx) => `
-    <tr class="hover:bg-blue-50/30 cursor-pointer" onclick="viewAdmission('${a.id}')">
-      <td class="px-4 py-3">${idx + 1}</td>
-      <td class="px-4 py-3 font-medium">${a.name}</td>
-      <td class="px-4 py-3 capitalize">${a.country}</td>
-      <td class="px-4 py-3">${formatProdi(a.prodi)}</td>
-      <td class="px-4 py-3 text-xs">${formatDate(a.date)}</td>
-      <td class="px-4 py-3"><span class="status-badge status-${a.status}">${formatAdmissionStatus(a.status)}</span></td>
-      <td class="px-4 py-3">
-        <button onclick="event.stopPropagation(); viewAdmission('${a.id}')" class="text-blue-600 hover:text-blue-800">👁️</button>
-      </td>
-    </tr>
-  `,
-      )
-      .join("") ||
-    '<tr><td colspan="7" class="px-4 py-8 text-center text-gray-400">Tidak ada data</td></tr>';
+    filtered.length > 0
+      ? filtered
+          .map(
+            (a, idx) => `
+      <tr class="hover:bg-blue-50/30 cursor-pointer">
+        <td class="px-4 py-3">${idx + 1}</td>
+        <td class="px-4 py-3 font-medium">${a.name}</td>
+        <td class="px-4 py-3 capitalize">${a.country}</td>
+        <td class="px-4 py-3">${formatProdi(a.prodi)}</td>
+        <td class="px-4 py-3 text-xs">${formatDate(a.date)}</td>
+        <td class="px-4 py-3">
+          <span class="status-badge status-${a.status}">
+            ${formatAdmissionStatus(a.status)}
+          </span>
+        </td>
+        <td class="px-4 py-3">
+          <button 
+            onclick="viewAdmission(${a.id})" 
+            class="text-blue-600 hover:text-blue-800 text-lg"
+          >
+            👁️
+          </button>
+        </td>
+      </tr>
+    `
+          )
+          .join("")
+      : `<tr>
+          <td colspan="7" class="px-4 py-8 text-center text-gray-400">
+            Tidak ada data
+          </td>
+        </tr>`;
 }
 
 // View admission detail
 function viewAdmission(id) {
-  const adm = admissions.find((a) => a.id === id);
+  const adm = admissions.find((a) => Number(a.id) === Number(id));
   if (!adm) return;
 
   currentAdmissionId = id;
+
   document.getElementById("admName").textContent = adm.name;
   document.getElementById("admCountry").textContent =
-    adm.country?.toUpperCase();
-  document.getElementById("admEmail").textContent = adm.email;
-  document.getElementById("admPhone").textContent = adm.phone;
-  document.getElementById("admProdi").textContent = formatProdi(adm.prodi);
-  document.getElementById("admDate").textContent = formatDate(adm.date);
+    adm.country?.toUpperCase() || "-";
+  document.getElementById("admEmail").textContent = adm.email || "-";
+  document.getElementById("admPhone").textContent = adm.phone || "-";
+  document.getElementById("admProdi").textContent =
+    formatProdi(adm.prodi) || "-";
+  document.getElementById("admDate").textContent =
+    formatDate(adm.date) || "-";
   document.getElementById("admNote").value = adm.note || "";
 
-  // Documents
   const docContainer = document.getElementById("admDocuments");
   docContainer.innerHTML =
-    adm.documents
-      ?.map(
-        (doc) => `
-    <div class="flex items-center gap-2 text-sm">
-      <span>📄</span>
-      <a href="#" class="text-blue-600 hover:underline">${doc}</a>
-    </div>
-  `,
-      )
-      .join("") || '<p class="text-sm text-gray-400">Tidak ada dokumen</p>';
+    adm.documents?.length
+      ? adm.documents
+          .map(
+            (doc) => `
+      <div class="flex items-center gap-2 text-sm">
+        <span>📄</span>
+        <a href="#" class="text-blue-600 hover:underline">${doc}</a>
+      </div>
+    `
+          )
+          .join("")
+      : '<p class="text-sm text-gray-400">Tidak ada dokumen</p>';
 
-  // Show modal
   const modal = document.getElementById("admissionModal");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
@@ -358,4 +376,15 @@ function formatProdi(code) {
     "teknik-informatika": "Teknik Informatika",
   };
   return map[code] || code;
+}
+function formatDate(dateStr) {
+  if (!dateStr) return "-";
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+
+  return d.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
