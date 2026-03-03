@@ -149,18 +149,45 @@ async function loadAdmissionsFromServer() {
     }
 
     // 🔥 MERGE MAPPING TANPA MERUSAK STRUKTUR LAMA
-    window.admissions = result.data.map(row => ({
-      id: row.row, // nomor baris dari backend
-      name: row["Full Name"] || "",
-      country: row["Nationality"] || "",
-      email: row["Email"] || "",
-      phone: row["Phone Number (Whatsapp)"] || "",
-      prodi: row["First Choice (Faculty - Department)"] || "",
-      date: row["Timestamp"] || "",
-      status: row.status || "pending",
-      note: "",
-      documents: []
+    window.admissions = result.data.map(row => {
+
+  // 🔥 kumpulkan semua link dokumen otomatis
+  const documentFields = [
+    "Curriculum Vitae (CV)",
+    "Active Passport",
+    "ID Card",
+    "Affidavite Letter",
+    "Secondary School Certificate",
+    "Secondary School Transcript",
+    "Bachelor Certificate",
+    "Bachelor Transcript",
+    "Master Certificate",
+    "Master Transcript",
+    "Research Proposal",
+    "Additional Document",
+    "Other Supporting Documents"
+  ];
+
+  const documents = documentFields
+    .filter(field => row[field])
+    .map(field => ({
+      label: field,
+      url: row[field]
     }));
+
+  return {
+    id: row.row,
+    name: row["Full Name"] || "",
+    country: row["Nationality"] || "",
+    email: row["Email"] || "",
+    phone: row["Phone Number (Whatsapp)"] || "",
+    prodi: row["First Choice (Faculty - Department)"] || "",
+    date: row["Timestamp"] || "",
+    status: row.status || "pending",
+    note: row.note || "",
+    documents
+  };
+});
 
     updateAdmissionStats();
     renderAdmissionTable();
@@ -283,16 +310,19 @@ function viewAdmission(id) {
   const docContainer = document.getElementById("admDocuments");
   docContainer.innerHTML =
     adm.documents?.length
-      ? adm.documents
-          .map(
-            (doc) => `
-      <div class="flex items-center gap-2 text-sm">
-        <span>📄</span>
-        <a href="#" class="text-blue-600 hover:underline">${doc}</a>
-      </div>
-    `
-          )
-          .join("")
+  ? adm.documents
+      .map(
+        (doc) => `
+        <div class="flex items-center gap-2 text-sm">
+          <span>📄</span>
+          <a href="${doc.url}" target="_blank"
+             class="text-blue-600 hover:underline">
+            ${doc.label}
+          </a>
+        </div>
+      `
+      )
+      .join("")
       : '<p class="text-sm text-gray-400">Tidak ada dokumen</p>';
 
   const modal = document.getElementById("admissionModal");
