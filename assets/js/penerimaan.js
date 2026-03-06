@@ -236,6 +236,7 @@ async function loadAdmissionsFromServer() {
     });
 
     updateAdmissionStats();
+    populateYearFilter();
     renderAdmissionTable();
     updateDashboardAdmissionCount();
   } catch (err) {
@@ -250,11 +251,14 @@ function updateDashboardAdmissionCount() {
 }
 function initPenerimaan() {
   document
-    .getElementById("filterStatus")
-    ?.addEventListener("change", renderAdmissionTable);
+  .getElementById("searchAdmission")
+  ?.addEventListener("input", () => {
+    currentAdmissionPage = 1;
+    renderAdmissionTable();
+  });
 
   document
-    .getElementById("filterDate")
+    .getElementById("filterYear")
     ?.addEventListener("change", renderAdmissionTable);
 
   // 🔥 LOAD DATA REAL
@@ -288,14 +292,28 @@ function renderAdmissionTable() {
   const tbody = document.getElementById("admissionTableBody");
   if (!tbody) return;
 
-  const statusFilter = document.getElementById("filterStatus")?.value || "";
-  const dateFilter = document.getElementById("filterDate")?.value || "";
+  const search = document
+  .getElementById("searchAdmission")
+  ?.value.toLowerCase() || "";
 
-  const filtered = admissions.filter((a) => {
-    const matchStatus = !statusFilter || a.status === statusFilter;
-    const matchDate = !dateFilter || a.date === dateFilter;
-    return matchStatus && matchDate;
-  });
+const yearFilter = document.getElementById("filterYear")?.value || "";
+
+const filtered = admissions.filter((a) => {
+
+  const textMatch =
+    a.name.toLowerCase().includes(search) ||
+    a.country.toLowerCase().includes(search) ||
+    a.prodi.toLowerCase().includes(search) ||
+    a.status.toLowerCase().includes(search);
+
+  let matchYear = true;
+  if (yearFilter) {
+    const d = parseAdmissionDate(a.date);
+    matchYear = d && d.getFullYear().toString() === yearFilter;
+  }
+
+  return textMatch && matchYear;
+});
 
   const total = filtered.length;
   const pageCount = Math.ceil(total / admissionItemsPerPage);
@@ -437,6 +455,25 @@ function renderAdmissionInfo(total, start, end) {
     end,
     total,
   )} dari ${total} data`;
+}
+function populateYearFilter() {
+  const select = document.getElementById("filterYear");
+  if (!select) return;
+
+  const years = new Set();
+
+  admissions.forEach((a) => {
+    const d = parseAdmissionDate(a.date);
+    if (d) years.add(d.getFullYear());
+  });
+
+  const sortedYears = [...years].sort((a, b) => b - a);
+
+  select.innerHTML =
+    `<option value="">Semua Tahun</option>` +
+    sortedYears
+      .map((y) => `<option value="${y}">${y}</option>`)
+      .join("");
 }
 // View admission detail
 function viewAdmission(id) {
@@ -608,4 +645,177 @@ function excelDateToJSDate(serial) {
     minutes,
     seconds,
   );
+}
+// === UNTUK DOWNLOAD PDF EXEL CSV === //
+// === DOWNLOAD FILE === //
+function toggleExportMenu() {
+  const menu = document.getElementById("exportMenu");
+  if (!menu) return;
+  menu.classList.toggle("hidden");
+}
+
+function exportToPDF() {
+  downloadAdmissionPDF();
+}
+
+function getAdmissionExportData() {
+  const search =
+    document.getElementById("searchAdmission")?.value.toLowerCase() || "";
+
+  const yearFilter =
+    document.getElementById("filterYear")?.value || "";
+
+  const filtered = admissions.filter((a) => {
+    const textMatch =
+      a.name.toLowerCase().includes(search) ||
+      a.country.toLowerCase().includes(search) ||
+      a.prodi.toLowerCase().includes(search) ||
+      a.status.toLowerCase().includes(search);
+
+    let matchYear = true;
+
+    if (yearFilter) {
+      const d = parseAdmissionDate(a.date);
+      matchYear = d && d.getFullYear().toString() === yearFilter;
+    }
+
+    return textMatch && matchYear;
+  });
+
+  return filtered;
+}
+
+// CSV
+function downloadAdmissionCSV() {
+  const data = getAdmissionExportData();
+  if (!data.length) return alert("Tidak ada data");
+
+  const headers = [
+    "Nama",
+    "Negara",
+    "Prodi",
+    "Email",
+    "Phone",
+    "Status",
+    "Tanggal Daftar",
+  ];
+
+  const rows = data.map((a) => [
+    a.name,
+    a.country,
+    formatProdi(a.prodi),
+    a.email,
+    a.phone,
+    formatAdmissionStatus(a.status),
+    formatDate(a.date),
+  ]);
+
+  let csvContent =
+    headers.join(",") + "\n" + rows.map((r) => r.join(",")).join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Data_Penerimaan_Mahasiswa_Asing.csv";
+  link.click();
+}
+
+// EXCEL
+function downloadAdmissionExcel() {
+  const data = getAdmissionExportData();
+  if (!data.length) return alert("Tidak ada data");
+
+  let table = `
+    <table>
+      <tr>
+        <th>Nama</th>
+        <th>Negara</th>
+        <th>Prodi</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Tanggal Daftar</th>
+      </tr>
+  `;
+
+  data.forEach((a) => {
+    table += `
+      <tr>
+        <td>${a.name}</td>
+        <td>${a.country}</td>
+        <td>${formatProdi(a.prodi)}</td>
+        <td>${a.email}</td>
+        <td>${a.phone}</td>
+        <td>${formatAdmissionStatus(a.status)}</td>
+        <td>${formatDate(a.date)}</td>
+      </tr>
+    `;
+  });
+
+  table += "</table>";
+
+  const blob = new Blob([table], {
+    type: "application/vnd.ms-excel",
+  });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Data_Penerimaan_Mahasiswa_Asing.xls";
+  link.click();
+}
+
+// PDF (print)
+function downloadAdmissionPDF() {
+  const data = getAdmissionExportData();
+  if (!data.length) return alert("Tidak ada data");
+
+  let html = `
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial; padding:20px; }
+        table { border-collapse: collapse; width:100%; }
+        th, td { border:1px solid #ddd; padding:6px; font-size:12px; }
+        th { background:#2563EB; color:white; }
+      </style>
+    </head>
+    <body>
+      <h2>Data Penerimaan Mahasiswa Asing</h2>
+      <table>
+        <tr>
+          <th>Nama</th>
+          <th>Negara</th>
+          <th>Prodi</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Tanggal</th>
+        </tr>
+  `;
+
+  data.forEach((a) => {
+    html += `
+      <tr>
+        <td>${a.name}</td>
+        <td>${a.country}</td>
+        <td>${formatProdi(a.prodi)}</td>
+        <td>${a.email}</td>
+        <td>${a.phone}</td>
+        <td>${formatAdmissionStatus(a.status)}</td>
+        <td>${formatDate(a.date)}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </table>
+    </body>
+    </html>
+  `;
+
+  const win = window.open("", "", "width=900,height=700");
+  win.document.write(html);
+  win.document.close();
+  win.print();
 }
