@@ -26,32 +26,59 @@
       class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between"
     >
       <div class="flex flex-wrap gap-3">
-        <select
-          id="filterStatus"
-          class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Semua Status</option>
-          <option value="pending">Menunggu Verifikasi</option>
-          <option value="verified">Terverifikasi</option>
-          <option value="process">Dalam Proses</option>
-          <option value="accepted">Diterima</option>
-        </select>
+        <div class="relative">
+  <span class="absolute left-3 top-2.5 text-gray-400">🔍</span>
+  <input
+    type="text"
+    id="searchAdmission"
+    placeholder="Cari Nama / Negara / Prodi / Status..."
+    class="pl-9 pr-4 py-2 border rounded-lg w-64 focus:ring-2 focus:ring-blue-500"
+  />
+</div>
 
-        <input
-          type="date"
-          id="filterDate"
-          class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <select
+  id="filterYear"
+  class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+>
+  <option value="">Semua Tahun</option>
+</select>
       </div>
 
       <div class="flex gap-2">
-        <button
-          onclick="exportToExcel()"
-          class="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition"
-        >
-          📊 Export Excel
-        </button>
+        <div class="relative">
+  <button
+    onclick="toggleExportMenu()"
+    class="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition"
+  >
+    📊 Export
+  </button>
 
+  <div
+    id="exportMenu"
+    class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50"
+  >
+    <button
+      onclick="downloadAdmissionExcel()"
+      class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+    >
+      📊 Excel (.xls)
+    </button>
+
+    <button
+      onclick="downloadAdmissionCSV()"
+      class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+    >
+      📑 CSV
+    </button>
+
+    <button
+      onclick="downloadAdmissionPDF()"
+      class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+    >
+      📄 PDF
+    </button>
+  </div>
+</div>
         <label
           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
         >
