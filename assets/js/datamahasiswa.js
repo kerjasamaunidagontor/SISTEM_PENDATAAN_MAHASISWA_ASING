@@ -45,6 +45,10 @@ async function initDatamahasiswa() {
   document
     .getElementById("filterProdi")
     ?.addEventListener("change", filterStudents);
+  // Auto-update semester saat tahun masuk atau status berubah
+document.getElementById('studentEntryDate')?.addEventListener('change', updateSemesterField);
+document.getElementById('studentStatus')?.addEventListener('change', updateSemesterField);
+  
 }
 
 /* ===============================
@@ -105,6 +109,19 @@ function renderStudentTable(page = 1) {
 
   for (let i = 0; i < paginated.length; i++) {
     const s = paginated[i];
+    // 🔥 Auto-calc semester untuk display (non-blocking)
+    let displaySemester = s.semester || '-';
+    if (s.tahun_masuk && ['aktif', 'cuti'].includes(s.status_beasiswa?.toLowerCase())) {
+      // Hitung async tapi jangan tunggu agar render tetap cepat
+      calculateAutoSemester(
+        parseInt(s.tahun_masuk), 
+        s.status_beasiswa, 
+        parseInt(s.semester)
+      ).then(calc => {
+        // Opsional: update UI jika perlu real-time
+        // document.querySelector(`[data-row="${s.row}"] .semester-cell`).textContent = calc;
+      });
+    }
 
     html += `
       <tr>
@@ -301,13 +318,24 @@ function editStudent(row) {
 
   document.getElementById("studentId").value = student.row;
   document.getElementById("kampus").value = student.kampus || "";
-  document.getElementById("semester").value = student.semester || "";
+  
+  // 🔥 Sync semester ke display + hidden (dukung string)
+  const semesterVal = student.semester !== undefined ? student.semester : "";
+  document.getElementById("semester").value = semesterVal;
+  document.getElementById("semesterValue").value = semesterVal;
+  
+  // ✨ Optional: style visual berdasarkan tipe value
+  const semesterInput = document.getElementById("semester");
+  if (typeof semesterVal === 'string' && isNaN(semesterVal)) {
+    semesterInput.classList.add('bg-gray-100', 'text-gray-600', 'font-medium');
+  } else {
+    semesterInput.classList.remove('bg-gray-100', 'text-gray-600', 'font-medium');
+  }
 
   // === EXPIRED DATE (FORMAT FIX) ===
   document.getElementById("passport_expired").value = convertToDateInputFormat(
     student.passport_expired,
   );
-
   document.getElementById("itas_expired").value = convertToDateInputFormat(
     student.itas_expired,
   );
@@ -322,20 +350,18 @@ function editStudent(row) {
   document.getElementById("studentNim").value = student.nim || "";
   document.getElementById("studentProdi").value = student.prodi || "";
   document.getElementById("studentEntryDate").value = student.tahun_masuk || "";
-  document.getElementById("studentStatus").value =
-    student.status_beasiswa || "";
+  document.getElementById("studentStatus").value = student.status_beasiswa || "";
 
   document.getElementById("foto").value = student.foto || "";
   document.getElementById("file_passport").value = student.file_passport || "";
   document.getElementById("file_itas").value = student.file_itas || "";
   document.getElementById("file_loa").value = student.file_loa || "";
 
-  // ===============================
-  // 🔥 UPDATE STATUS OTOMATIS SETELAH DATE TERISI
-  // ===============================
+  // 🔥 Trigger auto-calc semester setelah data loaded
   setTimeout(() => {
     updateStatusByExpired("passport_expired", "status_passport");
     updateStatusByExpired("itas_expired", "status_itas");
+    updateSemesterField(); // ← recalc based on entry year + status
   }, 100);
 
   openStudentModal();
@@ -351,8 +377,23 @@ async function handleStudentSubmit(e) {
   const submitBtn = form.querySelector("button[type='submit']");
   const row = document.getElementById("studentId").value;
 
-  // 🚫 cegah double submit
   if (submitBtn.disabled) return;
+
+  // 🔥 Auto-calculate semester sebelum submit
+  const entryYear = parseInt(document.getElementById('studentEntryDate').value);
+  const status = document.getElementById('studentStatus').value;
+  
+  try {
+    const autoSemester = await calculateAutoSemester(entryYear, status);
+    const semesterInput = document.getElementById('semester');
+    const semesterHidden = document.getElementById('semesterValue');
+    
+    // Update both: display + hidden
+    semesterInput.value = autoSemester;
+    if (semesterHidden) semesterHidden.value = autoSemester;
+  } catch (e) {
+    console.warn('Gagal auto-calc semester, pakai default');
+  }
 
   submitBtn.disabled = true;
   const originalText = submitBtn.innerHTML;
@@ -368,7 +409,11 @@ async function handleStudentSubmit(e) {
     negara: document.getElementById("studentCountry").value,
     nim: document.getElementById("studentNim").value,
     prodi: document.getElementById("studentProdi").value,
-    semester: document.getElementById("semester").value,
+    
+    // 🔥 Ambil dari hidden input (bukan dari disabled field)
+    semester: document.getElementById('semesterValue')?.value || 
+              document.getElementById('semester')?.value,
+              
     tahun_masuk: document.getElementById("studentEntryDate").value,
     passport_expired: document.getElementById("passport_expired").value,
     status_passport: document.getElementById("status_passport").value,
@@ -975,4 +1020,179 @@ function downloadStudentPDF() {
   win.document.write(html);
   win.document.close();
   win.print();
+}
+/**
+ * ===============================
+ * HIJRIYAH SEMESTER CALCULATOR
+ * ===============================
+ */
+
+// Mapping nama bulan Hijriyah
+const HIJRI_MONTHS = {
+  1: 'Muharram', 2: 'Safar', 3: 'Rabiul Awal', 4: 'Rabiul Akhir',
+  5: 'Jumadil Awal', 6: 'Jumadil Akhir', 7: 'Rajab', 8: "Sya'ban",
+  9: 'Ramadhan', 10: 'Syawwal', 11: "Dzulqo'dah", 12: "Dzulhijjah"
+};
+
+// Bulan untuk periode Ganjil (Odd Semester Period)
+const ODD_PERIOD_MONTHS = [10, 11, 12, 1, 2, 3]; // Syawwal → Rabiul Awal
+
+/**
+ * Konversi Gregorian ke Hijriyah (menggunakan API Aladhan)
+ * @param {Date} date - Date object Gregorian
+ * @returns {Promise<Object>} - { year, month, day, monthName }
+ */
+async function getHijriDate(date) {
+  try {
+    const d = date.getDate();
+    const m = date.getMonth() + 1;
+    const y = date.getFullYear();
+    
+    const response = await fetch(
+      `https://api.aladhan.com/v1/gToH?date=${d}-${m}-${y}&adjustment=0`
+    );
+    const data = await response.json();
+    
+    if (data.code === 200) {
+      const h = data.data.hijri;
+      return {
+        year: parseInt(h.year),
+        month: parseInt(h.month.number),
+        day: parseInt(h.day),
+        monthName: h.month.en
+      };
+    }
+  } catch (e) {
+    console.warn('Gagal fetch Hijri date, pakai fallback:', e);
+  }
+  
+  // Fallback: konversi sederhana (±2-3 hari error)
+  return gregorianToHijriFallback(date);
+}
+
+/**
+ * Fallback konversi sederhana jika API gagal
+ */
+function gregorianToHijriFallback(gDate) {
+  const jd = gDateToJulian(gDate);
+  const hijri = julianToHijri(jd);
+  return {
+    year: hijri.year,
+    month: hijri.month,
+    day: hijri.day,
+    monthName: HIJRI_MONTHS[hijri.month] || ''
+  };
+}
+
+function gDateToJulian(gd) {
+  let y = gd.getFullYear(), m = gd.getMonth() + 1, d = gd.getDate();
+  if (m <= 2) { y--; m += 12; }
+  const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+}
+
+function julianToHijri(jd) {
+  const l = Math.floor(jd + 0.5) + 13;
+  const n = Math.floor((l - 122.1) / 354.367);
+  const r = l - Math.floor(354.367 * n);
+  const y = n + 30;
+  const m = Math.ceil((r - 29.5) / 29.5);
+  const d = Math.floor(r - 29.5 * (m - 1));
+  return { year: y, month: Math.min(12, Math.max(1, m)), day: Math.min(30, Math.max(1, d)) };
+}
+
+/**
+ * Cek apakah bulan Hijriyah termasuk periode Ganjil
+ */
+function isOddPeriod(hijriMonth) {
+  return ODD_PERIOD_MONTHS.includes(hijriMonth);
+}
+
+/**
+ * 🔥 FUNGSI UTAMA: Hitung Semester Otomatis (FINAL VERSION)
+ * @param {number} entryYear - Tahun masuk (Gregorian)
+ * @param {string} status - Status mahasiswa
+ * @returns {Promise<string|number>} - Semester (angka) atau teks status
+ */
+async function calculateAutoSemester(entryYear, status) {
+  const statusLower = status?.toLowerCase();
+  
+  // 🎯 Jika Lulus/Non-Aktif → return teks status (kapitalisasi rapi)
+  if (statusLower === 'lulus') return 'Lulus';
+  if (statusLower === 'nonaktif') return 'Non-Aktif';
+  
+  if (!entryYear) return 1;
+  
+  try {
+    // Dapatkan tanggal Hijriyah saat ini
+    const hijriNow = await getHijriDate(new Date());
+    const currentHijriYear = hijriNow.year;
+    const currentHijriMonth = hijriNow.month;
+    
+    // Estimasi: Tahun masuk Hijriyah ≈ Gregorian - 579
+    const entryHijriYear = entryYear - 579;
+    
+    // Hitung selisih tahun Hijriyah
+    const yearDiff = currentHijriYear - entryHijriYear;
+    
+    // Base: setiap tahun Hijriyah = 2 semester, mulai dari 1
+    let semester = yearDiff * 2 + 1;
+    
+    // Adjust: jika sekarang di periode Genap, +1
+    if (!isOddPeriod(currentHijriMonth)) {
+      semester += 1;
+    }
+    
+    // 🛑 CAP di 14 (hanya di akhir, setelah kalkulasi selesai)
+    semester = Math.max(1, Math.min(14, semester));
+    
+    return semester; // return angka untuk status aktif/cuti
+    
+  } catch (error) {
+    console.error('Error calculate semester:', error);
+    return 1;
+  }
+}
+
+/**
+ * Update field semester di form secara otomatis
+ */
+async function updateSemesterField() {
+  const entryYear = parseInt(document.getElementById('studentEntryDate')?.value);
+  const status = document.getElementById('studentStatus')?.value;
+  const semesterInput = document.getElementById('semester');
+  const semesterHidden = document.getElementById('semesterValue');
+  
+  if (!semesterInput) return;
+  
+  // Tampilkan loading
+  semesterInput.placeholder = 'Menghitung...';
+  
+  try {
+    const result = await calculateAutoSemester(entryYear, status);
+    
+    // Update display field (disabled)
+    semesterInput.value = result;
+    
+    // 🔥 Sync ke hidden input untuk submit
+    if (semesterHidden) {
+      semesterHidden.value = result;
+    }
+    
+    // ✨ Optional: ubah style visual jika berupa teks
+    if (typeof result === 'string') {
+      semesterInput.classList.add('bg-gray-100', 'text-gray-600', 'font-medium');
+      semesterInput.classList.remove('bg-white');
+    } else {
+      semesterInput.classList.remove('bg-gray-100', 'text-gray-600', 'font-medium');
+      semesterInput.classList.add('bg-white');
+    }
+    
+  } catch (e) {
+    semesterInput.value = '1';
+    if (semesterHidden) semesterHidden.value = '1';
+    console.warn('Gagal hitung semester:', e);
+  } finally {
+    semesterInput.placeholder = '';
+  }
 }
