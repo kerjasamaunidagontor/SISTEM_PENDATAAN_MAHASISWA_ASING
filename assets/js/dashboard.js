@@ -118,201 +118,50 @@ function initCountryChart() {
 
   // 🔥 FULL ISO MAP (195 Negara)
   const countryISOMap = {
-    Afghanistan: "AF",
-    Albania: "AL",
-    Algeria: "DZ",
-    Andorra: "AD",
-    Angola: "AO",
-    "Antigua and Barbuda": "AG",
-    Argentina: "AR",
-    Armenia: "AM",
-    Australia: "AU",
-    Austria: "AT",
-    Azerbaijan: "AZ",
-    Bahamas: "BS",
-    Bahrain: "BH",
-    Bangladesh: "BD",
-    Barbados: "BB",
-    Belarus: "BY",
-    Belgium: "BE",
-    Belize: "BZ",
-    Benin: "BJ",
-    Bhutan: "BT",
-    Bolivia: "BO",
-    "Bosnia and Herzegovina": "BA",
-    Botswana: "BW",
-    Brazil: "BR",
-    "Brunei Darussalam": "BN",
-    Bulgaria: "BG",
-    "Burkina Faso": "BF",
-    Burundi: "BI",
-    "Cabo Verde": "CV",
-    Cambodia: "KH",
-    Cameroon: "CM",
-    Canada: "CA",
-    "Central African Republic": "CF",
-    Chad: "TD",
-    Chile: "CL",
-    China: "CN",
-    Colombia: "CO",
-    Comoros: "KM",
-    Congo: "CG",
-    "Costa Rica": "CR",
-    "Côte d’Ivoire": "CI",
-    Croatia: "HR",
-    Cuba: "CU",
-    Cyprus: "CY",
-    "Czech Republic": "CZ",
-    "Democratic Republic of the Congo": "CD",
-    Denmark: "DK",
-    Djibouti: "DJ",
-    Dominica: "DM",
-    "Dominican Republic": "DO",
-    Ecuador: "EC",
-    Egypt: "EG",
-    "El Salvador": "SV",
-    "Equatorial Guinea": "GQ",
-    Eritrea: "ER",
-    Estonia: "EE",
-    Eswatini: "SZ",
-    Ethiopia: "ET",
-    Fiji: "FJ",
-    Finland: "FI",
-    France: "FR",
-    Gabon: "GA",
-    Gambia: "GM",
-    Georgia: "GE",
-    Germany: "DE",
-    Ghana: "GH",
-    Greece: "GR",
-    Grenada: "GD",
-    Guatemala: "GT",
-    Guinea: "GN",
-    "Guinea-Bissau": "GW",
-    Guyana: "GY",
-    Haiti: "HT",
-    "Holy See": "VA",
-    Honduras: "HN",
-    Hungary: "HU",
-    Iceland: "IS",
-    India: "IN",
-    Indonesia: "ID",
-    Iran: "IR",
-    Iraq: "IQ",
-    Ireland: "IE",
-    Israel: "IL",
-    Italy: "IT",
-    Jamaica: "JM",
-    Japan: "JP",
-    Jordan: "JO",
-    Kazakhstan: "KZ",
-    Kenya: "KE",
-    Kiribati: "KI",
-    Kuwait: "KW",
-    Kyrgyzstan: "KG",
-    Laos: "LA",
-    Latvia: "LV",
-    Lebanon: "LB",
-    Lesotho: "LS",
-    Liberia: "LR",
-    Libya: "LY",
-    Liechtenstein: "LI",
-    Lithuania: "LT",
-    Luxembourg: "LU",
-    Madagascar: "MG",
-    Malawi: "MW",
-    Malaysia: "MY",
-    Maldives: "MV",
-    Mali: "ML",
-    Malta: "MT",
-    "Marshall Islands": "MH",
-    Mauritania: "MR",
-    Mauritius: "MU",
-    Mexico: "MX",
-    Micronesia: "FM",
-    Moldova: "MD",
-    Monaco: "MC",
-    Mongolia: "MN",
-    Montenegro: "ME",
-    Morocco: "MA",
-    Mozambique: "MZ",
-    Myanmar: "MM",
-    Namibia: "NA",
-    Nauru: "NR",
-    Nepal: "NP",
-    Netherlands: "NL",
-    "New Zealand": "NZ",
-    Nicaragua: "NI",
-    Niger: "NE",
-    Nigeria: "NG",
-    "North Korea": "KP",
-    "North Macedonia": "MK",
-    Norway: "NO",
-    Oman: "OM",
-    Pakistan: "PK",
-    Palau: "PW",
-    Palestine: "PS",
-    Panama: "PA",
-    "Papua New Guinea": "PG",
-    Paraguay: "PY",
-    Peru: "PE",
-    Philippines: "PH",
-    Poland: "PL",
-    Portugal: "PT",
-    Qatar: "QA",
-    Romania: "RO",
-    Russia: "RU",
-    Rwanda: "RW",
-    "Saint Kitts and Nevis": "KN",
-    "Saint Lucia": "LC",
-    "Saint Vincent and the Grenadines": "VC",
-    Samoa: "WS",
-    "San Marino": "SM",
-    "Sao Tome and Principe": "ST",
-    "Saudi Arabia": "SA",
-    Senegal: "SN",
-    Serbia: "RS",
-    Seychelles: "SC",
-    "Sierra Leone": "SL",
-    Singapore: "SG",
-    Slovakia: "SK",
-    Slovenia: "SI",
-    "Solomon Islands": "SB",
-    Somalia: "SO",
-    "South Africa": "ZA",
-    "South Korea": "KR",
-    "South Sudan": "SS",
-    Spain: "ES",
-    "Sri Lanka": "LK",
-    Sudan: "SD",
-    Suriname: "SR",
-    Sweden: "SE",
-    Switzerland: "CH",
-    Syria: "SY",
-    Tajikistan: "TJ",
-    Tanzania: "TZ",
-    Thailand: "TH",
-    "Timor-Leste": "TL",
-    Togo: "TG",
-    Tonga: "TO",
-    "Trinidad and Tobago": "TT",
-    Tunisia: "TN",
-    Turkey: "TR",
-    Turkmenistan: "TM",
-    Tuvalu: "TV",
-    Uganda: "UG",
-    Ukraine: "UA",
-    "United Arab Emirates": "AE",
-    "United Kingdom": "GB",
-    "United States": "US",
-    Uruguay: "UY",
-    Uzbekistan: "UZ",
-    Vanuatu: "VU",
-    Venezuela: "VE",
-    Vietnam: "VN",
-    Yemen: "YE",
-    Zambia: "ZM",
-    Zimbabwe: "ZW",
+    Afghanistan: "AF", Albania: "AL", Algeria: "DZ", Andorra: "AD", Angola: "AO",
+    "Antigua and Barbuda": "AG", Argentina: "AR", Armenia: "AM", Australia: "AU",
+    Austria: "AT", Azerbaijan: "AZ", Bahamas: "BS", Bahrain: "BH", Bangladesh: "BD",
+    Barbados: "BB", Belarus: "BY", Belgium: "BE", Belize: "BZ", Benin: "BJ",
+    Bhutan: "BT", Bolivia: "BO", "Bosnia and Herzegovina": "BA", Botswana: "BW",
+    Brazil: "BR", "Brunei Darussalam": "BN", Bulgaria: "BG", "Burkina Faso": "BF",
+    Burundi: "BI", "Cabo Verde": "CV", Cambodia: "KH", Cameroon: "CM", Canada: "CA",
+    "Central African Republic": "CF", Chad: "TD", Chile: "CL", China: "CN",
+    Colombia: "CO", Comoros: "KM", Congo: "CG", "Costa Rica": "CR", "Côte d'Ivoire": "CI",
+    Croatia: "HR", Cuba: "CU", Cyprus: "CY", "Czech Republic": "CZ",
+    "Democratic Republic of the Congo": "CD", Denmark: "DK", Djibouti: "DJ",
+    Dominica: "DM", "Dominican Republic": "DO", Ecuador: "EC", Egypt: "EG",
+    "El Salvador": "SV", "Equatorial Guinea": "GQ", Eritrea: "ER", Estonia: "EE",
+    Eswatini: "SZ", Ethiopia: "ET", Fiji: "FJ", Finland: "FI", France: "FR",
+    Gabon: "GA", Gambia: "GM", Georgia: "GE", Germany: "DE", Ghana: "GH",
+    Greece: "GR", Grenada: "GD", Guatemala: "GT", Guinea: "GN", "Guinea-Bissau": "GW",
+    Guyana: "GY", Haiti: "HT", "Holy See": "VA", Honduras: "HN", Hungary: "HU",
+    Iceland: "IS", India: "IN", Indonesia: "ID", Iran: "IR", Iraq: "IQ",
+    Ireland: "IE", Israel: "IL", Italy: "IT", Jamaica: "JM", Japan: "JP",
+    Jordan: "JO", Kazakhstan: "KZ", Kenya: "KE", Kiribati: "KI", Kuwait: "KW",
+    Kyrgyzstan: "KG", Laos: "LA", Latvia: "LV", Lebanon: "LB", Lesotho: "LS",
+    Liberia: "LR", Libya: "LY", Liechtenstein: "LI", Lithuania: "LT", Luxembourg: "LU",
+    Madagascar: "MG", Malawi: "MW", Malaysia: "MY", Maldives: "MV", Mali: "ML",
+    Malta: "MT", "Marshall Islands": "MH", Mauritania: "MR", Mauritius: "MU",
+    Mexico: "MX", Micronesia: "FM", Moldova: "MD", Monaco: "MC", Mongolia: "MN",
+    Montenegro: "ME", Morocco: "MA", Mozambique: "MZ", Myanmar: "MM", Namibia: "NA",
+    Nauru: "NR", Nepal: "NP", Netherlands: "NL", "New Zealand": "NZ", Nicaragua: "NI",
+    Niger: "NE", Nigeria: "NG", "North Korea": "KP", "North Macedonia": "MK",
+    Norway: "NO", Oman: "OM", Pakistan: "PK", Palau: "PW", Palestine: "PS",
+    Panama: "PA", "Papua New Guinea": "PG", Paraguay: "PY", Peru: "PE",
+    Philippines: "PH", Poland: "PL", Portugal: "PT", Qatar: "QA", Romania: "RO",
+    Russia: "RU", Rwanda: "RW", "Saint Kitts and Nevis": "KN", "Saint Lucia": "LC",
+    "Saint Vincent and the Grenadines": "VC", Samoa: "WS", "San Marino": "SM",
+    "Sao Tome and Principe": "ST", "Saudi Arabia": "SA", Senegal: "SN", Serbia: "RS",
+    Seychelles: "SC", "Sierra Leone": "SL", Singapore: "SG", Slovakia: "SK",
+    Slovenia: "SI", "Solomon Islands": "SB", Somalia: "SO", "South Africa": "ZA",
+    "South Korea": "KR", "South Sudan": "SS", Spain: "ES", "Sri Lanka": "LK",
+    Sudan: "SD", Suriname: "SR", Sweden: "SE", Switzerland: "CH", Syria: "SY",
+    Tajikistan: "TJ", Tanzania: "TZ", Thailand: "TH", "Timor-Leste": "TL", Togo: "TG",
+    Tonga: "TO", "Trinidad and Tobago": "TT", Tunisia: "TN", Turkey: "TR",
+    Turkmenistan: "TM", Tuvalu: "TV", Uganda: "UG", Ukraine: "UA",
+    "United Arab Emirates": "AE", "United Kingdom": "GB", "United States": "US",
+    Uruguay: "UY", Uzbekistan: "UZ", Vanuatu: "VU", Venezuela: "VE", Vietnam: "VN",
+    Yemen: "YE", Zambia: "ZM", Zimbabwe: "ZW",
   };
 
   // 🔥 BALIKKAN ISO → COUNTRY NAME
@@ -329,49 +178,185 @@ function initCountryChart() {
     }
   });
 
+  // 🔥 INIT MAP DENGAN CONFIGURASI YANG LEBIH BAIK
   window.countryMapInstance = new jsVectorMap({
     selector: "#countryMap",
     map: "world",
     zoomButtons: true,
+    zoomOnScroll: true,
+    zoomMax: 5,
+    zoomMin: 1,
+    zoomAnimate: true,
+    zoomStep: 1.5,
     regionStyle: {
-      initial: { fill: "#E5E7EB" },
-      hover: { fill: "#3B82F6" },
+      initial: { 
+        fill: "#E5E7EB",
+        fillOpacity: 1,
+        stroke: "#FFFFFF",
+        strokeWidth: 0.5
+      },
+      hover: { 
+        fill: "#3B82F6",
+        fillOpacity: 0.8,
+        cursor: "pointer"
+      },
+      selected: {
+        fill: "#2563EB"
+      }
     },
     series: {
       regions: [
         {
           values: mapData,
-          scale: ["#93C5FD", "#1D4ED8"],
+          scale: ["#BFDBFE", "#1D4ED8"],
           normalizeFunction: "polynomial",
+          attribute: "fill"
         },
       ],
     },
     onRegionTooltipShow(event, tooltip, code) {
-      const value = mapData[code] || 0;
-      const totalStudents = students.length;
-
-      const percent = totalStudents
-        ? ((value / totalStudents) * 100).toFixed(1)
-        : 0;
-
-      const countryName = isoToCountryMap[code] || tooltip.textContent;
-
-      // 🔥 Buat bar teks (max 10 blok)
-      const barLength = 10;
-      const filledBlocks = Math.round((percent / 100) * barLength);
-      const emptyBlocks = barLength - filledBlocks;
-
-      const progressBar = "█".repeat(filledBlocks) + "░".repeat(emptyBlocks);
-
-      tooltip.innerHTML = `
-    <div style="font-family:monospace;padding:6px;line-height:1.5;">
-      🌍 ${countryName}<br>
-      👨‍🎓 ${value} Mahasiswa<br>
-      ${progressBar}<br>
-      ${percent}% dari total
+  const value = mapData[code] || 0;
+  const totalStudents = students.length || 0;
+  const percent = totalStudents ? ((value / totalStudents) * 100).toFixed(1) : 0;
+  const countryName = isoToCountryMap[code] || code;
+  const barWidth = Math.min(percent, 100);
+  
+  // 🔥 DETEKSI UKURAN LAYAR
+  const isMobile = window.innerWidth <= 768;
+  const isSmallMobile = window.innerWidth <= 480;
+  
+  // 🔥 RESPONSIVE STYLES
+  const padding = isSmallMobile ? '6px 8px' : (isMobile ? '8px 10px' : '12px 16px');
+  const fontSize = isSmallMobile ? '10px' : (isMobile ? '11px' : '13px');
+  const headerFontSize = isSmallMobile ? '11px' : (isMobile ? '13px' : '15px');
+  const iconSize = isSmallMobile ? '11px' : (isMobile ? '12px' : '14px');
+  const iconWidth = isSmallMobile ? '14px' : (isMobile ? '16px' : '20px');
+  const flagSize = isSmallMobile ? '14px' : (isMobile ? '16px' : '20px');
+  const borderRadius = isSmallMobile ? '6px' : (isMobile ? '8px' : '12px');
+  const minWidth = isSmallMobile ? '140px' : (isMobile ? '160px' : '220px');
+  const maxWidth = isSmallMobile ? 'calc(100vw - 16px)' : (isMobile ? 'calc(100vw - 20px)' : '280px');
+  const gap = isSmallMobile ? '4px' : (isMobile ? '6px' : '8px');
+  const marginBottom = isSmallMobile ? '6px' : (isMobile ? '8px' : '12px');
+  const paddingBottom = isSmallMobile ? '4px' : (isMobile ? '6px' : '8px');
+  const valuePadding = isSmallMobile ? '1px 4px' : (isMobile ? '1px 6px' : '2px 8px');
+  const valueFontSize = isSmallMobile ? '9px' : (isMobile ? '10px' : '12px');
+  const progressHeight = isSmallMobile ? '3px' : (isMobile ? '4px' : '6px');
+  
+  // 🔥 TOOLTIP DENGAN RESPONSIVE INLINE STYLES
+  const tooltipContent = `
+    <div style="
+      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+      border: 1px solid #e5e7eb;
+      border-radius: ${borderRadius};
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+      padding: ${padding};
+      font-family: 'Inter', sans-serif;
+      font-size: ${fontSize};
+      min-width: ${minWidth};
+      max-width: ${maxWidth};
+      width: auto;
+      color: #1f2937;
+      line-height: 1.4;
+      box-sizing: border-box;
+    ">
+      <!-- Header -->
+      <div style="
+        display: flex;
+        align-items: center;
+        gap: ${gap};
+        margin-bottom: ${marginBottom};
+        padding-bottom: ${paddingBottom};
+        border-bottom: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+      ">
+        <span style="font-size: ${flagSize}; flex-shrink: 0;">🌍</span>
+        <span style="
+          font-weight: ${isSmallMobile ? '600' : '700'};
+          font-size: ${headerFontSize};
+          color: #111827;
+          flex: 1;
+          min-width: 0;
+          word-break: break-word;
+        ">${countryName}</span>
+      </div>
+      
+      <!-- Body -->
+      <div style="display: flex; flex-direction: column; gap: ${gap};">
+        <!-- Student Count -->
+        <div style="display: flex; align-items: center; gap: ${gap}; font-size: ${fontSize}; flex-wrap: wrap;">
+          <span style="font-size: ${iconSize}; width: ${iconWidth}; text-align: center; flex-shrink: 0;">👨‍🎓</span>
+          <span style="color: #6b7280; flex: 1; min-width: 0; word-break: break-word;">Mahasiswa:</span>
+          <span style="
+            font-weight: 600;
+            color: #1f2937;
+            background: #eff6ff;
+            padding: ${valuePadding};
+            border-radius: ${isSmallMobile ? '4px' : '6px'};
+            font-size: ${valueFontSize};
+            flex-shrink: 0;
+          ">${value}</span>
+        </div>
+        
+        ${value > 0 ? `
+        <!-- Percentage -->
+        <div style="display: flex; align-items: center; gap: ${gap}; font-size: ${fontSize}; flex-wrap: wrap;">
+          <span style="font-size: ${iconSize}; width: ${iconWidth}; text-align: center; flex-shrink: 0;">📊</span>
+          <span style="color: #6b7280; flex: 1; min-width: 0; word-break: break-word;">Persentase:</span>
+          <span style="
+            font-weight: 600;
+            color: #1f2937;
+            background: #eff6ff;
+            padding: ${valuePadding};
+            border-radius: ${isSmallMobile ? '4px' : '6px'};
+            font-size: ${valueFontSize};
+            flex-shrink: 0;
+          ">${percent}%</span>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div style="
+          width: 100%;
+          height: ${progressHeight};
+          background: #e5e7eb;
+          border-radius: ${isSmallMobile ? '2px' : '3px'};
+          overflow: hidden;
+          margin-top: ${isSmallMobile ? '2px' : '4px'};
+        ">
+          <div style="
+            height: 100%;
+            width: ${barWidth}%;
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+            border-radius: ${isSmallMobile ? '2px' : '3px'};
+            transition: width 0.3s ease;
+          "></div>
+        </div>
+        ` : `<div style="color: #9ca3af; font-style: italic; text-align: center; padding: ${isSmallMobile ? '2px 0' : '4px 0'}; font-size: ${isSmallMobile ? '9px' : '12px'};">Tidak ada mahasiswa</div>`}
+      </div>
     </div>
   `;
-    },
+
+  // 🔥 Set tooltip content
+  if (tooltip.setContent) {
+    tooltip.setContent(tooltipContent);
+  } else if (event && event.tooltip) {
+    event.tooltip.innerHTML = tooltipContent;
+  } else {
+    setTimeout(() => {
+      const jvmTooltip = document.querySelector('.jvm-tooltip');
+      if (jvmTooltip) {
+        jvmTooltip.innerHTML = tooltipContent;
+      }
+    }, 10);
+  }
+},
+    onRegionClick(event, code) {
+      const value = mapData[code] || 0;
+      if (value > 0) {
+        const countryName = isoToCountryMap[code] || code;
+        console.log(`Clicked: ${countryName} - ${value} students`);
+        // Optional: Add click handler to show detailed info
+      }
+    }
   });
 }
 /* =====================================================
