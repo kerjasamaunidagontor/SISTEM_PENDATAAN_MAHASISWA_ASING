@@ -41,24 +41,27 @@
   </div>
 
   <!-- Charts Row -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Country Chart -->
-    <div class="bg-white rounded-xl shadow p-5">
-      <h3 class="font-semibold text-gray-700 mb-4">📊 Mahasiswa per Negara</h3>
-      <!-- Chart wrapper dengan height terdefinisi -->
-      <div class="chart-wrapper relative" style="height: 300px">
-        <div id="countryMap" class="w-full h-[350px]"></div>
-      </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Country Chart -->
+  <div class="bg-white rounded-xl shadow p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-semibold text-gray-700 text-lg">📊 Mahasiswa per Negara</h3>
+      
     </div>
+    <div class="chart-wrapper relative">
+      <div id="countryMap" class="w-full"></div>
+    </div>
+    
+  </div>
 
-    <!-- Trend Chart -->
-    <div class="bg-white rounded-xl shadow p-5">
-      <h3 class="font-semibold text-gray-700 mb-4">📈 Tren Penerimaan</h3>
-      <div class="chart-wrapper relative" style="height: 300px">
-        <canvas id="trendChart"></canvas>
-      </div>
+  <!-- Trend Chart -->
+  <div class="bg-white rounded-xl shadow p-5">
+    <h3 class="font-semibold text-gray-700 text-lg mb-4">📈 Tren Penerimaan</h3>
+    <div class="chart-wrapper relative">
+      <canvas id="trendChart"></canvas>
     </div>
   </div>
+</div>
 
   <!-- Recent Activity -->
   <div class="bg-white rounded-xl shadow p-5">
