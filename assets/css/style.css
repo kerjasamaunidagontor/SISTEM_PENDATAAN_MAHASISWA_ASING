@@ -1564,3 +1564,271 @@ textarea,
 .btn-red:hover {
   background: #b91c1c;
 }
+/* 🔥 CUSTOM TOOLTIP STYLING */
+/* 🔥 CUSTOM TOOLTIP STYLING UNTUK MAP */
+.jvm-tooltip {
+  background: linear-gradient(135deg, #4417c0 0%, #337ac0 100%) !important;
+  border: 1px solid #2d529c !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  padding: 0 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  min-width: 220px !important;
+  max-width: 280px !important;
+  width: auto !important;
+  overflow: hidden !important;
+  color: #1f2937 !important;
+  box-sizing: border-box !important;
+  z-index: 9999 !important;
+}
+
+.jvm-tooltip .custom-tooltip {
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+.jvm-tooltip .tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  flex-wrap: wrap;
+}
+
+.jvm-tooltip .tooltip-flag {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.jvm-tooltip .tooltip-country {
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff;
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.jvm-tooltip .tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jvm-tooltip .tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.jvm-tooltip .tooltip-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.jvm-tooltip .tooltip-label {
+  color: rgba(255,255,255,0.9);
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.jvm-tooltip .tooltip-value {
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.jvm-tooltip .tooltip-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.jvm-tooltip .tooltip-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.jvm-tooltip .tooltip-empty {
+  color: rgba(255,255,255,0.7);
+  font-style: italic;
+  text-align: center;
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+/* 🔥 RESPONSIVE UNTUK MOBILE */
+@media (max-width: 768px) {
+  .jvm-tooltip {
+    min-width: 160px !important;
+    max-width: calc(100vw - 20px) !important;
+    width: auto !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+  
+  .jvm-tooltip .custom-tooltip {
+    padding: 8px 10px !important;
+  }
+  
+  .jvm-tooltip .tooltip-header {
+    margin-bottom: 8px !important;
+    padding-bottom: 6px !important;
+    gap: 6px !important;
+  }
+  
+  .jvm-tooltip .tooltip-flag {
+    font-size: 16px !important;
+  }
+  
+  .jvm-tooltip .tooltip-country {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+  }
+  
+  .jvm-tooltip .tooltip-body {
+    gap: 6px !important;
+  }
+  
+  .jvm-tooltip .tooltip-row {
+    font-size: 11px !important;
+    gap: 6px !important;
+  }
+  
+  .jvm-tooltip .tooltip-icon {
+    font-size: 12px !important;
+    width: 16px !important;
+  }
+  
+  .jvm-tooltip .tooltip-label {
+    font-size: 10px !important;
+  }
+  
+  .jvm-tooltip .tooltip-value {
+    font-size: 10px !important;
+    padding: 1px 6px !important;
+  }
+  
+  .jvm-tooltip .tooltip-progress {
+    height: 4px !important;
+    margin-top: 2px !important;
+  }
+  
+  .jvm-tooltip .tooltip-empty {
+    font-size: 10px !important;
+  }
+}
+
+/* 🔥 RESPONSIVE UNTUK MOBILE KECIL (<= 480px) */
+@media (max-width: 480px) {
+  .jvm-tooltip {
+    min-width: 140px !important;
+    max-width: calc(100vw - 16px) !important;
+    border-radius: 6px !important;
+  }
+  
+  .jvm-tooltip .custom-tooltip {
+    padding: 6px 8px !important;
+  }
+  
+  .jvm-tooltip .tooltip-header {
+    margin-bottom: 6px !important;
+    padding-bottom: 4px !important;
+    gap: 4px !important;
+  }
+  
+  .jvm-tooltip .tooltip-flag {
+    font-size: 14px !important;
+  }
+  
+  .jvm-tooltip .tooltip-country {
+    font-size: 11px !important;
+  }
+  
+  .jvm-tooltip .tooltip-body {
+    gap: 4px !important;
+  }
+  
+  .jvm-tooltip .tooltip-row {
+    font-size: 10px !important;
+    gap: 4px !important;
+  }
+  
+  .jvm-tooltip .tooltip-icon {
+    font-size: 11px !important;
+    width: 14px !important;
+  }
+  
+  .jvm-tooltip .tooltip-label {
+    font-size: 9px !important;
+  }
+  
+  .jvm-tooltip .tooltip-value {
+    font-size: 9px !important;
+    padding: 1px 4px !important;
+    border-radius: 4px !important;
+  }
+  
+  .jvm-tooltip .tooltip-progress {
+    height: 3px !important;
+    margin-top: 2px !important;
+  }
+  
+  .jvm-tooltip .tooltip-empty {
+    font-size: 9px !important;
+  }
+}
+
+/* 🔥 MAP CONTAINER IMPROVEMENTS */
+#countryMap {
+  width: 100%;
+  height: 100%;
+  min-height: 350px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 350px;
+}
+
+/* 🔥 RESPONSIVE MAP CONTAINER */
+@media (max-width: 768px) {
+  .chart-wrapper {
+    height: 250px;
+  }
+  
+  #countryMap {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-wrapper {
+    height: 200px;
+  }
+  
+  #countryMap {
+    min-height: 200px;
+  }
+}
