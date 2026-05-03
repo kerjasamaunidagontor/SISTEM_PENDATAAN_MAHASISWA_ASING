@@ -130,7 +130,7 @@ function renderStudentTable(page = 1) {
         <td>${s.nim}</td>
         <td>${s.negara}</td>
         <td>${s.prodi}</td>
-        <td>${s.status || "-"}</td>
+        <td>${s.status_beasiswa || "-"}</td>
         <td class="space-x-2">
   <button 
     onclick="viewStudent(${s.row})"
