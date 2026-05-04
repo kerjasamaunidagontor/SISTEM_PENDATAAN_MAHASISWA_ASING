@@ -536,8 +536,8 @@ function renderUpcomingEvents() {
 
   const upcoming = mobilityPrograms
     .filter((p) => p.endISO && new Date(p.endISO) >= today)
-    .sort((a, b) => new Date(a.startISO) - new Date(b.startISO))
-    .slice(0, 5);
+    .sort((a, b) => new Date(a.startISO) - new Date(b.startISO));
+    
 
   function getBadgeColor(type) {
     if (type === "outbound") return "bg-blue-100 text-blue-600";
