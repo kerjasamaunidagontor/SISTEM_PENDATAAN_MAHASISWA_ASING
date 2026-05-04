@@ -5,7 +5,7 @@
 const MOBILITY_API = window.API.mobility;
 let mobilityPrograms = [];
 let currentMobilityPage = 1;
-const mobilityItemsPerPage = 25;
+const mobilityItemsPerPage = 10;
 let filteredMobilityData = null;
 
 /* ===============================
