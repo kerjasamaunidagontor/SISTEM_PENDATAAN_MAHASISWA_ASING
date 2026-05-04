@@ -54,34 +54,36 @@ async function loadStudentsFromAPI() {
 
     if (result.success) {
       students = result.data.map((s) => ({
-  row: s.row,
-  kampus: s.kampus || "",
-  nama: s.nama || "",
-  negara: s.negara || "",
-  nim: s.nim || "",
-  prodi: s.prodi || "",
-  semester: s.semester || "",
-  tahun_masuk: s.tahun_masuk || "",
-  passport_expired: s.passport_expired || "",
-  status_passport: s.status_passport || "",
-  itas_expired: s.itas_expired || "",
-  status_itas: s.status_itas || "",
-  guarantor: s.guarantor || "",
-  siakad: s.siakad || "",
-  foto: s.foto || "",
-  file_passport: s.file_passport || "",
-  file_itas: s.file_itas || "",
-  file_loa: s.file_loa || "",
-  reguler_kmi: s.reguler_kmi || "",
-  status_beasiswa: s.status_beasiswa || "",
-  fakultas: s.fakultas || "",
-  jenis_kelamin: s.jenis_kelamin || "",
-  martikulasi_history: s.martikulasi_history || "",
-  first_activation_date: s.first_activation_date || "",
-  // 🔥 TAMBAH FIELD CUTI
-  cuti_start_date: s.cuti_start_date || "",
-  cuti_history: s.cuti_history || "",
-}));
+        row: s.row,
+        kampus: s.kampus || "",
+        nama: s.nama || "",
+        negara: s.negara || "",
+        nim: s.nim || "",
+        prodi: s.prodi || "",
+        semester: s.semester || "",
+        tahun_masuk: s.tahun_masuk || "",
+        passport_expired: s.passport_expired || "",
+        status_passport: s.status_passport || "",
+        itas_expired: s.itas_expired || "",
+        status_itas: s.status_itas || "",
+        guarantor: s.guarantor || "",
+        siakad: s.siakad || "",
+        foto: s.foto || "",
+        file_passport: s.file_passport || "",
+        file_itas: s.file_itas || "",
+        file_loa: s.file_loa || "",
+        reguler_kmi: s.reguler_kmi || "",
+        status_beasiswa: s.status_beasiswa || "",
+        fakultas: s.fakultas || "",
+        jenis_kelamin: s.jenis_kelamin || "",
+        martikulasi_history: s.martikulasi_history || "",
+        first_activation_date: s.first_activation_date || "",
+        cuti_start_date: s.cuti_start_date || "",
+        cuti_history: s.cuti_history || "",
+      }));
+
+      // 🔥 TAMBAHKAN INI: Urutkan data terbaru (row terbesar) di paling atas
+      students.sort((a, b) => parseInt(b.row) - parseInt(a.row));
 
       renderStudentTable(1);
     }
@@ -89,7 +91,6 @@ async function loadStudentsFromAPI() {
     console.error("Load Error:", error);
   }
 }
-
 /* ===============================
    RENDER TABLE (FAST)
 ================================= */
