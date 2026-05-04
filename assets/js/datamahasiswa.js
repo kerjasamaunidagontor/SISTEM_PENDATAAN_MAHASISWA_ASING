@@ -7,48 +7,41 @@ const API_URL = window.API.mahasiswa;
 let students = [];
 let currentPageNum = 1;
 const itemsPerPage = 20; // 🔥 jangan 100
+// 🔥 TAMBAHKAN DI ATAS FILE, setelah deklarasi variabel lain
+let originalStudentStatus = ""; // Untuk tracking status awal saat edit
 
 /* ===============================
    INIT
 ================================= */
 async function initDatamahasiswa() {
-  students = []; // reset dulu
+  students = [];
 
   await loadStudentsFromAPI();
   await loadCountryDropdown();
   loadProdiDropdown();
   loadYearDropdown();
 
-  document
-    .getElementById("searchStudent")
-    ?.addEventListener("input", debounceFilter);
-
-  document
-    .getElementById("filterCountry")
-    ?.addEventListener("change", filterStudents);
-
-  document
-    .getElementById("studentForm")
-    ?.addEventListener("submit", handleStudentSubmit);
-
-  document
-    .getElementById("itas_expired")
-    ?.addEventListener("change", () =>
-      updateStatusByExpired("itas_expired", "status_itas"),
-    );
-
-  document
-    .getElementById("passport_expired")
-    ?.addEventListener("change", () =>
-      updateStatusByExpired("passport_expired", "status_passport"),
-    );
-  document
-    .getElementById("filterProdi")
-    ?.addEventListener("change", filterStudents);
-  // Auto-update semester saat tahun masuk atau status berubah
-document.getElementById('studentEntryDate')?.addEventListener('change', updateSemesterField);
-document.getElementById('studentStatus')?.addEventListener('change', updateSemesterField);
+  document.getElementById("searchStudent")?.addEventListener("input", debounceFilter);
+  document.getElementById("filterCountry")?.addEventListener("change", filterStudents);
+  document.getElementById("studentForm")?.addEventListener("submit", handleStudentSubmit);
   
+  document.getElementById("itas_expired")?.addEventListener("change", () =>
+    updateStatusByExpired("itas_expired", "status_itas")
+  );
+  
+  document.getElementById("passport_expired")?.addEventListener("change", () =>
+    updateStatusByExpired("passport_expired", "status_passport")
+  );
+  
+  document.getElementById("filterProdi")?.addEventListener("change", filterStudents);
+  
+  // 🔥 Auto-update semester saat tahun masuk atau status berubah
+  document.getElementById('studentEntryDate')?.addEventListener('change', updateSemesterField);
+  document.getElementById('studentStatus')?.addEventListener('change', updateSemesterField);
+  
+  // Tambahkan listener untuk field martikulasi
+  document.getElementById('martikulasiHistory')?.addEventListener('change', updateSemesterField);
+  document.getElementById('firstActivationDate')?.addEventListener('change', updateSemesterField);
 }
 
 /* ===============================
@@ -61,29 +54,34 @@ async function loadStudentsFromAPI() {
 
     if (result.success) {
       students = result.data.map((s) => ({
-        row: s.row, // 🔥 penting untuk update/delete
-        kampus: s.kampus || "",
-        nama: s.nama || "",
-        negara: s.negara || "",
-        nim: s.nim || "",
-        prodi: s.prodi || "",
-        semester: s.semester || "",
-        tahun_masuk: s.tahun_masuk || "",
-        passport_expired: s.passport_expired || "",
-        status_passport: s.status_passport || "",
-        itas_expired: s.itas_expired || "",
-        status_itas: s.status_itas || "",
-        guarantor: s.guarantor || "",
-        siakad: s.siakad || "",
-        foto: s.foto || "",
-        file_passport: s.file_passport || "",
-        file_itas: s.file_itas || "",
-        file_loa: s.file_loa || "",
-        reguler_kmi: s.reguler_kmi || "",
-        status_beasiswa: s.status_beasiswa || "",
-        fakultas: s.fakultas || "",
-        jenis_kelamin: s.jenis_kelamin || "",
-      }));
+  row: s.row,
+  kampus: s.kampus || "",
+  nama: s.nama || "",
+  negara: s.negara || "",
+  nim: s.nim || "",
+  prodi: s.prodi || "",
+  semester: s.semester || "",
+  tahun_masuk: s.tahun_masuk || "",
+  passport_expired: s.passport_expired || "",
+  status_passport: s.status_passport || "",
+  itas_expired: s.itas_expired || "",
+  status_itas: s.status_itas || "",
+  guarantor: s.guarantor || "",
+  siakad: s.siakad || "",
+  foto: s.foto || "",
+  file_passport: s.file_passport || "",
+  file_itas: s.file_itas || "",
+  file_loa: s.file_loa || "",
+  reguler_kmi: s.reguler_kmi || "",
+  status_beasiswa: s.status_beasiswa || "",
+  fakultas: s.fakultas || "",
+  jenis_kelamin: s.jenis_kelamin || "",
+  martikulasi_history: s.martikulasi_history || "",
+  first_activation_date: s.first_activation_date || "",
+  // 🔥 TAMBAH FIELD CUTI
+  cuti_start_date: s.cuti_start_date || "",
+  cuti_history: s.cuti_history || "",
+}));
 
       renderStudentTable(1);
     }
@@ -109,19 +107,10 @@ function renderStudentTable(page = 1) {
 
   for (let i = 0; i < paginated.length; i++) {
     const s = paginated[i];
-    // 🔥 Auto-calc semester untuk display (non-blocking)
-    let displaySemester = s.semester || '-';
-    if (s.tahun_masuk && ['aktif', 'cuti'].includes(s.status_beasiswa?.toLowerCase())) {
-      // Hitung async tapi jangan tunggu agar render tetap cepat
-      calculateAutoSemester(
-        parseInt(s.tahun_masuk), 
-        s.status_beasiswa, 
-        parseInt(s.semester)
-      ).then(calc => {
-        // Opsional: update UI jika perlu real-time
-        // document.querySelector(`[data-row="${s.row}"] .semester-cell`).textContent = calc;
-      });
-    }
+    
+    // ✅ HAPUS auto-calc di sini, tidak perlu
+    // Langsung tampilkan data dari database
+    const displaySemester = s.semester || '-';
 
     html += `
       <tr>
@@ -132,27 +121,25 @@ function renderStudentTable(page = 1) {
         <td>${s.prodi}</td>
         <td>${s.status_beasiswa || "-"}</td>
         <td class="space-x-2">
-  <button 
-    onclick="viewStudent(${s.row})"
-    class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
-  >
-    Detail
-  </button>
-
-  <button 
-    onclick="editStudent(${s.row})"
-    class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600"
-  >
-    Edit
-  </button>
-
-  <button 
-    onclick="deleteStudent(${s.row})"
-    class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
-  >
-    Hapus
-  </button>
-</td>
+          <button 
+            onclick="viewStudent(${s.row})"
+            class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Detail
+          </button>
+          <button 
+            onclick="editStudent(${s.row})"
+            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600"
+          >
+            Edit
+          </button>
+          <button 
+            onclick="deleteStudent(${s.row})"
+            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Hapus
+          </button>
+        </td>
       </tr>
     `;
   }
@@ -174,7 +161,6 @@ function renderStudentTable(page = 1) {
     showingEnd.textContent = 0;
   }
 
-  // Render pagination
   renderPagination(filtered.length);
 }
 /* ===============================
@@ -308,60 +294,57 @@ function closeStudentModal() {
 }
 
 /* ===============================
-   EDIT
+   EDIT - FIXED VERSION
 ================================= */
 function editStudent(row) {
   const student = students.find((s) => s.row == row);
   if (!student) return;
 
-  document.getElementById("modalTitle").innerText = "Edit Mahasiswa";
+  originalStudentStatus = student.status_beasiswa?.toLowerCase() || "";
 
+  document.getElementById("modalTitle").innerText = "Edit Mahasiswa";
   document.getElementById("studentId").value = student.row;
   document.getElementById("kampus").value = student.kampus || "";
   
-  // 🔥 Sync semester ke display + hidden (dukung string)
-  const semesterVal = student.semester !== undefined ? student.semester : "";
-  document.getElementById("semester").value = semesterVal;
-  document.getElementById("semesterValue").value = semesterVal;
+  const savedSemester = student.semester || "";
+  document.getElementById("semester").value = savedSemester;
+  document.getElementById("semesterValue").value = savedSemester;
   
-  // ✨ Optional: style visual berdasarkan tipe value
   const semesterInput = document.getElementById("semester");
-  if (typeof semesterVal === 'string' && isNaN(semesterVal)) {
+  if (typeof savedSemester === 'string' && isNaN(savedSemester)) {
     semesterInput.classList.add('bg-gray-100', 'text-gray-600', 'font-medium');
   } else {
     semesterInput.classList.remove('bg-gray-100', 'text-gray-600', 'font-medium');
   }
 
-  // === EXPIRED DATE (FORMAT FIX) ===
-  document.getElementById("passport_expired").value = convertToDateInputFormat(
-    student.passport_expired,
-  );
-  document.getElementById("itas_expired").value = convertToDateInputFormat(
-    student.itas_expired,
-  );
+  // Load tracking fields
+  document.getElementById('martikulasiHistory').value = student.martikulasi_history || "";
+  document.getElementById('firstActivationDate').value = student.first_activation_date || "";
+  document.getElementById('cutiStartDate').value = student.cuti_start_date || "";
+  document.getElementById('cutiHistory').value = student.cuti_history || "";
 
+  // Field lainnya
+  document.getElementById("passport_expired").value = convertToDateInputFormat(student.passport_expired);
+  document.getElementById("itas_expired").value = convertToDateInputFormat(student.itas_expired);
   document.getElementById("guarantor").value = student.guarantor || "";
   document.getElementById("siakad").value = student.siakad || "";
   document.getElementById("fakultas").value = student.fakultas || "";
   document.getElementById("jenis_kelamin").value = student.jenis_kelamin || "";
-
   document.getElementById("studentName").value = student.nama || "";
   document.getElementById("studentCountry").value = student.negara || "";
   document.getElementById("studentNim").value = student.nim || "";
   document.getElementById("studentProdi").value = student.prodi || "";
   document.getElementById("studentEntryDate").value = student.tahun_masuk || "";
   document.getElementById("studentStatus").value = student.status_beasiswa || "";
-
   document.getElementById("foto").value = student.foto || "";
   document.getElementById("file_passport").value = student.file_passport || "";
   document.getElementById("file_itas").value = student.file_itas || "";
   document.getElementById("file_loa").value = student.file_loa || "";
 
-  // 🔥 Trigger auto-calc semester setelah data loaded
   setTimeout(() => {
     updateStatusByExpired("passport_expired", "status_passport");
     updateStatusByExpired("itas_expired", "status_itas");
-    updateSemesterField(); // ← recalc based on entry year + status
+    // Jangan auto-calc semester
   }, 100);
 
   openStudentModal();
@@ -379,20 +362,39 @@ async function handleStudentSubmit(e) {
 
   if (submitBtn.disabled) return;
 
-  // 🔥 Auto-calculate semester sebelum submit
   const entryYear = parseInt(document.getElementById('studentEntryDate').value);
   const status = document.getElementById('studentStatus').value;
+  const savedSemester = document.getElementById('semesterValue')?.value || "";
+  const martikulasiHistory = document.getElementById('martikulasiHistory')?.value || "";
+  const firstActivationDate = document.getElementById('firstActivationDate')?.value || "";
   
   try {
-    const autoSemester = await calculateAutoSemester(entryYear, status);
+    // ✅ PERBAIKI - tambahkan originalStudentStatus
+    const calcResult = await calculateAutoSemester(
+      entryYear, 
+      status, 
+      originalStudentStatus,  // ← PARAMETER BARU
+      savedSemester,
+      martikulasiHistory,
+      firstActivationDate
+    );
+    
     const semesterInput = document.getElementById('semester');
     const semesterHidden = document.getElementById('semesterValue');
     
-    // Update both: display + hidden
-    semesterInput.value = autoSemester;
-    if (semesterHidden) semesterHidden.value = autoSemester;
+    semesterInput.value = calcResult.semester;
+    if (semesterHidden) semesterHidden.value = calcResult.semester;
+    
+    // Update hidden fields
+    if (calcResult.firstActivationDate && document.getElementById('firstActivationDate')) {
+      document.getElementById('firstActivationDate').value = calcResult.firstActivationDate;
+    }
+    if (calcResult.history && document.getElementById('martikulasiHistory')) {
+      document.getElementById('martikulasiHistory').value = calcResult.history;
+    }
+    
   } catch (e) {
-    console.warn('Gagal auto-calc semester, pakai default');
+    console.warn('Gagal auto-calc semester:', e);
   }
 
   submitBtn.disabled = true;
@@ -403,17 +405,12 @@ async function handleStudentSubmit(e) {
     action: row ? "update" : "create",
     sheet: "DATA MAHASISWA",
     row: row || "",
-
     kampus: document.getElementById("kampus").value || "UNIDA GONTOR",
     nama: document.getElementById("studentName").value,
     negara: document.getElementById("studentCountry").value,
     nim: document.getElementById("studentNim").value,
     prodi: document.getElementById("studentProdi").value,
-    
-    // 🔥 Ambil dari hidden input (bukan dari disabled field)
-    semester: document.getElementById('semesterValue')?.value || 
-              document.getElementById('semester')?.value,
-              
+    semester: document.getElementById('semesterValue')?.value || document.getElementById('semester')?.value,
     tahun_masuk: document.getElementById("studentEntryDate").value,
     passport_expired: document.getElementById("passport_expired").value,
     status_passport: document.getElementById("status_passport").value,
@@ -428,6 +425,9 @@ async function handleStudentSubmit(e) {
     status_beasiswa: document.getElementById("studentStatus").value,
     fakultas: document.getElementById("fakultas").value,
     jenis_kelamin: document.getElementById("jenis_kelamin").value,
+    // Tambahkan field baru
+    martikulasi_history: document.getElementById('martikulasiHistory')?.value || "",
+    first_activation_date: document.getElementById('firstActivationDate')?.value || ""
   };
 
   try {
@@ -443,21 +443,14 @@ async function handleStudentSubmit(e) {
       throw new Error(result.error || "Gagal menyimpan data");
     }
 
-    // 🔥 reload data
     await loadStudentsFromAPI();
-
     closeStudentModal();
-
-    alert(
-      row
-        ? "✅ Data mahasiswa berhasil diupdate!"
-        : "✅ Data mahasiswa berhasil ditambahkan!",
-    );
+    originalStudentStatus = ""; // ✅ Reset setelah save
+    alert(row ? "✅ Data mahasiswa berhasil diupdate!" : "✅ Data mahasiswa berhasil ditambahkan!");
   } catch (err) {
     console.error("Submit Error:", err);
     alert("❌ Terjadi kesalahan saat menyimpan data");
   } finally {
-    // 🔥 aktifkan kembali tombol
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalText;
   }
@@ -481,8 +474,8 @@ function viewStudent(row) {
     <div><strong>Semester:</strong> ${student.semester || "-"}</div>
     <div><strong>Fakultas:</strong> ${student.fakultas || "-"}</div>
     <div><strong>Jenis Kelamin:</strong> ${student.jenis_kelamin || "-"}</div>
-    <div><strong>Siakad:</strong> ${student.siakad || "-"}</div>
-    <div><strong>Status Beasiswa:</strong> ${student.status_beasiswa || "-"}</div>
+    <div><strong>Status Mahasiswa:</strong> ${student.siakad || "-"}</div>
+    <div><strong>Siakad:</strong> ${student.status_beasiswa || "-"}</div>
   `;
 
   // DOKUMEN LEGAL
@@ -1109,49 +1102,175 @@ function isOddPeriod(hijriMonth) {
 }
 
 /**
- * 🔥 FUNGSI UTAMA: Hitung Semester Otomatis (FINAL VERSION)
- * @param {number} entryYear - Tahun masuk (Gregorian)
- * @param {string} status - Status mahasiswa
- * @returns {Promise<string|number>} - Semester (angka) atau teks status
+ * 🔥 Hitung Semester Otomatis - LOGIKA BARU
+ * @param {number} entryYear - Tahun masuk
+ * @param {string} currentStatus - Status SAAT INI (dari form)
+ * @param {string} originalStatus - Status AWAL dari database (untuk deteksi transisi)
+ * @param {string} savedSemester - Nilai semester dari DB
+ * @param {string} martikulasiHistory - Riwayat martikulasi (JSON string)
+ * @param {string} firstActivationDate - Tanggal aktivasi pertama
  */
-async function calculateAutoSemester(entryYear, status) {
-  const statusLower = status?.toLowerCase();
+async function calculateAutoSemester(entryYear, currentStatus, originalStatus = "", savedSemester = "", martikulasiHistory = "", firstActivationDate = "", cutiStartDate = "", cutiHistory = "") {
+  const currentStatusLower = currentStatus?.toLowerCase();
+  const originalStatusLower = originalStatus?.toLowerCase();
   
-  // 🎯 Jika Lulus/Non-Aktif → return teks status (kapitalisasi rapi)
-  if (statusLower === 'lulus') return 'Lulus';
-  if (statusLower === 'nonaktif') return 'Non-Aktif';
-  
-  if (!entryYear) return 1;
-  
-  try {
-    // Dapatkan tanggal Hijriyah saat ini
-    const hijriNow = await getHijriDate(new Date());
-    const currentHijriYear = hijriNow.year;
-    const currentHijriMonth = hijriNow.month;
-    
-    // Estimasi: Tahun masuk Hijriyah ≈ Gregorian - 579
-    const entryHijriYear = entryYear - 579;
-    
-    // Hitung selisih tahun Hijriyah
-    const yearDiff = currentHijriYear - entryHijriYear;
-    
-    // Base: setiap tahun Hijriyah = 2 semester, mulai dari 1
-    let semester = yearDiff * 2 + 1;
-    
-    // Adjust: jika sekarang di periode Genap, +1
-    if (!isOddPeriod(currentHijriMonth)) {
-      semester += 1;
+  // 🟢 Status khusus → return teks
+  if (currentStatusLower === 'martikulasi') {
+    return { semester: 'Martikulasi', firstActivationDate, history: martikulasiHistory, cutiStartDate, cutiHistory };
+  }
+  if (currentStatusLower === 'lulus') {
+    return { semester: 'Lulus', firstActivationDate, history: martikulasiHistory, cutiStartDate, cutiHistory };
+  }
+  // 🔴 TAMBAHAN: Status Non-Aktif → return teks "Non-Aktif"
+  if (currentStatusLower === 'nonaktif') {
+    return { 
+      semester: 'Non-Aktif', 
+      firstActivationDate, 
+      history: martikulasiHistory, 
+      cutiStartDate, 
+      cutiHistory 
+    };
+  }
+  // 🟡 STATUS CUTI - Bekukan semester
+  if (currentStatusLower === 'cuti') {
+    // Jika baru cuti (sebelumnya aktif), simpan tanggal mulai cuti
+    let newCutiStartDate = cutiStartDate;
+    if (originalStatusLower === 'aktif' && !cutiStartDate) {
+      newCutiStartDate = new Date().toISOString().split('T')[0];
+      
+      // Tambah ke history cuti
+      const history = cutiHistory ? JSON.parse(cutiHistory) : [];
+      history.push({
+        date: newCutiStartDate,
+        type: 'cuti_start',
+        semester: savedSemester
+      });
+      cutiHistory = JSON.stringify(history);
     }
     
-    // 🛑 CAP di 14 (hanya di akhir, setelah kalkulasi selesai)
+    return { 
+      semester: savedSemester || 1, // Pertahankan semester terakhir
+      firstActivationDate, 
+      history: martikulasiHistory,
+      cutiStartDate: newCutiStartDate,
+      cutiHistory
+    };
+  }
+  
+  // 🟢 KEMBALI DARI CUTI - FIXED
+if (currentStatusLower === 'aktif' && originalStatusLower === 'cuti') {
+  // Tambah ke history
+  const history = cutiHistory ? JSON.parse(cutiHistory) : [];
+  history.push({
+    date: new Date().toISOString().split('T')[0],
+    type: 'cuti_end',
+    semester: savedSemester,
+    note: 'Kembali dari cuti - semester dilanjutkan'
+  });
+  
+  // ✅ PENTING: Saat kembali dari cuti, SEMESTER TETAP sama seperti saat cuti
+  // Jangan recalculate dari firstActivationDate karena akan loncat!
+  // Biarkan semester tetap di nilai terakhir sebelum cuti
+  const frozenSemester = parseInt(savedSemester) || 1;
+  
+  return { 
+    semester: frozenSemester,  // ← Tetap gunakan semester yang dibekukan
+    firstActivationDate,       // ← firstActivationDate tetap (untuk hitungan future)
+    history: martikulasiHistory,
+    cutiStartDate: "",         // ← Clear cuti start date
+    cutiHistory: JSON.stringify(history)
+  };
+}
+  
+  // 🔴 TRANSISI: Martikulasi → Aktif
+  if (originalStatusLower === 'martikulasi' && currentStatusLower === 'aktif') {
+    const today = new Date().toISOString().split('T')[0];
+    const activationDate = firstActivationDate || today;
+    
+    const history = martikulasiHistory ? JSON.parse(martikulasiHistory) : [];
+    history.push({
+      date: today,
+      type: 'activation',
+      from: 'Martikulasi',
+      to: 'Aktif'
+    });
+    
+    return { 
+      semester: 1, 
+      firstActivationDate: activationDate,
+      history: JSON.stringify(history),
+      cutiStartDate,
+      cutiHistory
+    };
+  }
+  
+  // 🔵 NORMAL: Mahasiswa aktif (bukan transisi dari martikulasi/cuti)
+if (currentStatusLower === 'aktif' && originalStatusLower !== 'martikulasi' && originalStatusLower !== 'cuti') {
+  let baseDate;
+  
+  if (firstActivationDate) {
+    baseDate = new Date(firstActivationDate);
+  } else if (entryYear) {
+    baseDate = new Date(entryYear, 0, 1);
+  } else {
+    return { 
+      semester: 1, 
+      firstActivationDate, 
+      history: martikulasiHistory,
+      cutiStartDate,
+      cutiHistory
+    };
+  }
+  
+  try {
+    const hijriNow = await getHijriDate(new Date());
+    const hijriBase = await getHijriDate(baseDate);
+    
+    const currentHijriYear = hijriNow.year;
+    const currentHijriMonth = hijriNow.month;
+    const baseHijriYear = hijriBase.year;
+    const baseHijriMonth = hijriBase.month;
+    
+    let yearDiff = currentHijriYear - baseHijriYear;
+    let semester = yearDiff * 2;
+    
+    const isNowOdd = isOddPeriod(currentHijriMonth);
+    
+    if (yearDiff === 0) {
+      semester = isNowOdd ? 1 : 2;
+    } else {
+      semester += isNowOdd ? 1 : 2;
+    }
+    
     semester = Math.max(1, Math.min(14, semester));
     
-    return semester; // return angka untuk status aktif/cuti
-    
-  } catch (error) {
-    console.error('Error calculate semester:', error);
-    return 1;
+    return { 
+      semester: semester, 
+      firstActivationDate,
+      history: martikulasiHistory,
+      cutiStartDate,
+      cutiHistory
+    };
+  } catch (e) {
+    console.error('Error calculating hijri semester:', e);
+    return { 
+      semester: 1, 
+      firstActivationDate, 
+      history: martikulasiHistory,
+      cutiStartDate,
+      cutiHistory
+    };
   }
+}
+  
+  // Default fallback
+  return { 
+    semester: 1, 
+    firstActivationDate, 
+    history: martikulasiHistory,
+    cutiStartDate,
+    cutiHistory
+  };
 }
 
 /**
@@ -1159,40 +1278,99 @@ async function calculateAutoSemester(entryYear, status) {
  */
 async function updateSemesterField() {
   const entryYear = parseInt(document.getElementById('studentEntryDate')?.value);
-  const status = document.getElementById('studentStatus')?.value;
+  const currentStatus = document.getElementById('studentStatus')?.value;
   const semesterInput = document.getElementById('semester');
   const semesterHidden = document.getElementById('semesterValue');
+  const martikulasiHistoryInput = document.getElementById('martikulasiHistory');
+  const firstActivationInput = document.getElementById('firstActivationDate');
+  const cutiStartDateInput = document.getElementById('cutiStartDate');
+  const cutiHistoryInput = document.getElementById('cutiHistory');
   
   if (!semesterInput) return;
   
-  // Tampilkan loading
   semesterInput.placeholder = 'Menghitung...';
+  semesterInput.disabled = true;
   
   try {
-    const result = await calculateAutoSemester(entryYear, status);
+    const savedSemester = semesterInput.value || semesterHidden?.value || "";
+    const martikulasiHistory = martikulasiHistoryInput?.value || "";
+    const firstActivationDate = firstActivationInput?.value || "";
+    const cutiStartDate = cutiStartDateInput?.value || "";
+    const cutiHistory = cutiHistoryInput?.value || "";
     
-    // Update display field (disabled)
-    semesterInput.value = result;
+    const result = await calculateAutoSemester(
+      entryYear, 
+      currentStatus,
+      originalStudentStatus,
+      savedSemester, 
+      martikulasiHistory,
+      firstActivationDate,
+      cutiStartDate,
+      cutiHistory
+    );
     
-    // 🔥 Sync ke hidden input untuk submit
-    if (semesterHidden) {
-      semesterHidden.value = result;
+    // Update semester
+    const semesterValue = result.semester;
+    semesterInput.value = semesterValue;
+    if (semesterHidden) semesterHidden.value = semesterValue;
+    
+    // Update hidden fields
+    if (result.firstActivationDate && firstActivationInput) {
+      firstActivationInput.value = result.firstActivationDate;
+    }
+    if (result.history && martikulasiHistoryInput) {
+      martikulasiHistoryInput.value = result.history;
+    }
+    if (result.cutiStartDate !== undefined && cutiStartDateInput) {
+      cutiStartDateInput.value = result.cutiStartDate || "";
+    }
+    if (result.cutiHistory !== undefined && cutiHistoryInput) {
+      cutiHistoryInput.value = result.cutiHistory || "";
     }
     
-    // ✨ Optional: ubah style visual jika berupa teks
-    if (typeof result === 'string') {
-      semesterInput.classList.add('bg-gray-100', 'text-gray-600', 'font-medium');
-      semesterInput.classList.remove('bg-white');
+    // 🔥 Visual style - MERGED: Bedakan Non-Aktif (merah) vs status string lain (amber)
+    if (typeof semesterValue === 'string') {
+      const semesterLower = semesterValue.toLowerCase();
+      if (semesterLower === 'non-aktif' || semesterLower === 'nonaktif') {
+        // 🔴 Non-Aktif: merah
+        semesterInput.className = 'w-full px-3 py-2 bg-red-50 text-red-700 font-semibold border border-red-200 rounded-lg';
+      } else {
+        // 🟡 Martikulasi / Lulus: amber
+        semesterInput.className = 'w-full px-3 py-2 bg-amber-50 text-amber-700 font-semibold border border-amber-200 rounded-lg';
+      }
     } else {
-      semesterInput.classList.remove('bg-gray-100', 'text-gray-600', 'font-medium');
-      semesterInput.classList.add('bg-white');
+      // ⚪ Angka semester: putih biasa
+      semesterInput.className = 'w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg';
+    }
+    
+    // 🔥 Tampilkan info status - MERGED: support cuti DAN nonaktif
+    const info = document.getElementById('semesterInfo');
+    if (info) {
+      if (currentStatus?.toLowerCase() === 'nonaktif') {
+        info.textContent = `Status: Non-Aktif (Semester dibekukan)`;
+        info.className = 'text-sm text-red-600 mt-1';
+      } else if (currentStatus?.toLowerCase() === 'cuti') {
+        info.textContent = `Cuti (Semester ${savedSemester} dibekukan)`;
+        info.className = 'text-sm text-orange-600 mt-1';
+      } else if (currentStatus?.toLowerCase() === 'aktif' && typeof semesterValue === 'number') {
+        info.textContent = `Semester ${semesterValue} (Hijriyah)`;
+        info.className = 'text-sm text-blue-600 mt-1';
+      } else {
+        // Clear info untuk status lain
+        info.textContent = '';
+        info.className = '';
+      }
     }
     
   } catch (e) {
+    console.warn('Gagal hitung semester:', e);
     semesterInput.value = '1';
     if (semesterHidden) semesterHidden.value = '1';
-    console.warn('Gagal hitung semester:', e);
   } finally {
     semesterInput.placeholder = '';
+    semesterInput.disabled = false;
   }
 }
+
+
+
