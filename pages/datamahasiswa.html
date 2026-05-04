@@ -100,6 +100,15 @@
     <form id="studentForm" class="p-6 space-y-8">
       <input type="hidden" id="studentId" />
 
+      <!-- 🔥 TAMBAHKAN INI DI SINI -->
+  <input type="hidden" id="martikulasiHistory" name="martikulasiHistory" value="">
+<input type="hidden" id="firstActivationDate" name="firstActivationDate" value="">
+<!-- 🔥 TAMBAH INI -->
+<input type="hidden" id="cutiStartDate" name="cutiStartDate" value="">
+<input type="hidden" id="cutiHistory" name="cutiHistory" value="">
+  
+    
+
       <!-- ================= DATA UTAMA ================= -->
       <div>
         <h4
@@ -141,12 +150,13 @@
           </div>
 
           <div>
-            <label class="label">Status</label>
+            <label class="label">SIAKAD</label>
             <select id="studentStatus" class="input">
               <option value="aktif">Aktif</option>
               <option value="cuti">Cuti</option>
               <option value="lulus">Lulus</option>
               <option value="nonaktif">Non-Aktif</option>
+              <option value="martikulasi">Martikulasi</option>
             </select>
           </div>
         </div>
@@ -163,7 +173,17 @@
         <div class="grid md:grid-cols-3 gap-5">
           <div>
             <label class="label">Kampus</label>
-            <input type="text" id="kampus" class="input" />
+            <select id="kampus" class="input">
+              <option value="">-- Pilih Kampus--</option>
+              <option value="KAMPUS A">KAMPUS A</option>
+              <option value="KAMPUS B">KAMPUS B</option>
+              <option value="KAMPUS C">KAMPUS C</option>
+              <option value="KAMPUS D">KAMPUS D</option>
+              <option value="KAMPUS E">KAMPUS E</option>
+              <option value="KAMPUS F">KAMPUS F</option>
+              <option value="KAMPUS G">KAMPUS G</option>
+              <option value="KAMPUS H">KAMPUS H</option>
+            </select>
           </div>
 
           <div>
@@ -209,18 +229,20 @@
           <div>
             <label class="label">Jenis Kelamin</label>
             <select id="jenis_kelamin" class="input">
+              <option value="">-- Pilih Jenis Kelamin--</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
           </div>
 
           <div>
-            <label class="label">SIAKAD</label>
-            <select id="siakad" class="input">
-              <option value="AKTIF">AKTIF</option>
-              <option value="NONAKTIF">NONAKTIF</option>
-            </select>
-          </div>
+  <label class="label">Status Beasiswa</label>
+  <select id="siakad" class="input">
+    <option value="">-- Pilih Status Beasiswa--</option>
+    <option value="Regular">Regular</option>
+    <option value="Scholarship">Scholarship</option>
+  </select>
+</div>
         </div>
       </div>
 
