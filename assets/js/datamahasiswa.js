@@ -91,6 +91,7 @@ async function loadStudentsFromAPI() {
     console.error("Load Error:", error);
   }
 }
+
 /* ===============================
    RENDER TABLE (FAST)
 ================================= */
@@ -782,14 +783,23 @@ function loadProdiDropdown(force = false) {
   });
 }
 /* ===============================
-  UPDATE STATUS ITAS OTOMATIS
+  UPDATE STATUS PASSPORT/ITAS OTOMATIS - FIXED VERSION
 ================================= */
 function updateStatusByExpired(expiredId, statusId) {
   const expiredInput = document.getElementById(expiredId).value;
   const statusSelect = document.getElementById(statusId);
 
+  // 🔥 JIKA TANGGAL KOSONG → SET STATUS KOSONG (NULL)
   if (!expiredInput) {
-    statusSelect.value = "Tidak Aktif";
+    // Cek apakah value "" sudah ada di option, jika belum tambahkan
+    let emptyOption = Array.from(statusSelect.options).find(opt => opt.value === "");
+    if (!emptyOption) {
+      const newOption = document.createElement("option");
+      newOption.value = "";
+      newOption.textContent = "-- Belum Diisi --";
+      statusSelect.appendChild(newOption);
+    }
+    statusSelect.value = "";  // ← SET KE KOSONG, BUKAN "Tidak Aktif"
     return;
   }
 
@@ -799,23 +809,20 @@ function updateStatusByExpired(expiredId, statusId) {
   today.setHours(0, 0, 0, 0);
   expiredDate.setHours(0, 0, 0, 0);
 
+  // 🔥 JIKA SUDAH LEWAT TANGGAL EXPIRED → Tidak Aktif
   if (expiredDate < today) {
     statusSelect.value = "Tidak Aktif";
     return;
   }
 
-  // === HITUNG SELISIH ===
+  // === HITUNG SELISIH WAKTU ===
   let years = expiredDate.getFullYear() - today.getFullYear();
   let months = expiredDate.getMonth() - today.getMonth();
   let days = expiredDate.getDate() - today.getDate();
 
   if (days < 0) {
     months--;
-    const prevMonth = new Date(
-      expiredDate.getFullYear(),
-      expiredDate.getMonth(),
-      0,
-    );
+    const prevMonth = new Date(expiredDate.getFullYear(), expiredDate.getMonth(), 0);
     days += prevMonth.getDate();
   }
 
@@ -826,11 +833,8 @@ function updateStatusByExpired(expiredId, statusId) {
 
   const result = `${years} Tahun ${months} Bulan ${days} Hari`;
 
-  // 🔥 Tambahkan option baru TANPA menghapus yang lama
-  let existingOption = Array.from(statusSelect.options).find(
-    (opt) => opt.value === result,
-  );
-
+  // 🔥 Tambahkan option baru jika belum ada
+  let existingOption = Array.from(statusSelect.options).find(opt => opt.value === result);
   if (!existingOption) {
     const newOption = document.createElement("option");
     newOption.value = result;
