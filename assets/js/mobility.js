@@ -72,6 +72,9 @@ async function loadMobilityFromAPI() {
         };
       });
 
+      // 🔥 TAMBAHKAN INI: Urutkan data terbaru (row terbesar) di paling atas
+      mobilityPrograms.sort((a, b) => parseInt(b.row) - parseInt(a.row));
+
       console.log("MAPPED:", mobilityPrograms[0]);
 
       updateMobilityStats(); // 🔥 penting
