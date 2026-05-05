@@ -789,28 +789,36 @@ function updateStatusByExpired(expiredId, statusId) {
   const expiredInput = document.getElementById(expiredId).value;
   const statusSelect = document.getElementById(statusId);
 
-  // 🔥 JIKA TANGGAL KOSONG → SET STATUS KOSONG (NULL)
-  if (!expiredInput) {
-    // Cek apakah value "" sudah ada di option, jika belum tambahkan
-    let emptyOption = Array.from(statusSelect.options).find(opt => opt.value === "");
-    if (!emptyOption) {
-      const newOption = document.createElement("option");
-      newOption.value = "";
-      newOption.textContent = "-- Belum Diisi --";
-      statusSelect.appendChild(newOption);
+  // 🔥 Helper: Pastikan option ada sebelum di-set
+  function ensureOptionExists(select, value, text) {
+    let option = Array.from(select.options).find(opt => opt.value === value);
+    if (!option) {
+      option = document.createElement("option");
+      option.value = value;
+      option.textContent = text;
+      select.appendChild(option);
     }
-    statusSelect.value = "";  // ← SET KE KOSONG, BUKAN "Tidak Aktif"
+    return option;
+  }
+
+  // 🔥 JIKA TANGGAL KOSONG → SET STATUS KOSONG
+  if (!expiredInput) {
+    ensureOptionExists(statusSelect, "", "-- Belum Diisi --");
+    statusSelect.value = "";
     return;
   }
 
   const today = new Date();
-  const expiredDate = new Date(expiredInput);
+  // 🔥 FIX: Parse date dengan format YYYY-MM-DD secara eksplisit untuk hindari timezone issue
+  const [year, month, day] = expiredInput.split("-").map(Number);
+  const expiredDate = new Date(year, month - 1, day); // month 0-indexed
 
   today.setHours(0, 0, 0, 0);
   expiredDate.setHours(0, 0, 0, 0);
 
   // 🔥 JIKA SUDAH LEWAT TANGGAL EXPIRED → Tidak Aktif
   if (expiredDate < today) {
+    ensureOptionExists(statusSelect, "Tidak Aktif", "Tidak Aktif"); // ← TAMBAHKAN OPTION DULU!
     statusSelect.value = "Tidak Aktif";
     return;
   }
@@ -833,15 +841,8 @@ function updateStatusByExpired(expiredId, statusId) {
 
   const result = `${years} Tahun ${months} Bulan ${days} Hari`;
 
-  // 🔥 Tambahkan option baru jika belum ada
-  let existingOption = Array.from(statusSelect.options).find(opt => opt.value === result);
-  if (!existingOption) {
-    const newOption = document.createElement("option");
-    newOption.value = result;
-    newOption.textContent = result;
-    statusSelect.appendChild(newOption);
-  }
-
+  // 🔥 Tambahkan option hasil kalkulasi jika belum ada
+  ensureOptionExists(statusSelect, result, result);
   statusSelect.value = result;
 }
 /* ===============================
