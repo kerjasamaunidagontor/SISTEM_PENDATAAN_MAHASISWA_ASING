@@ -764,6 +764,7 @@ function loadProdiDropdown(force = false) {
     "Keselamatan dan Kesehatan Kerja",
     "Hubungan Internasional",
     "Ilmu Komunikasi",
+    "Kedokteran",
     "Magister Pendidikan Bahasa Arab",
     "Magister Aqidah dan Filsafat Islam",
     "Magister Hukum Ekonomi Syariah",
