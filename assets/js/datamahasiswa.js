@@ -9,6 +9,7 @@ let currentPageNum = 1;
 const itemsPerPage = 20; // 🔥 jangan 100
 // 🔥 TAMBAHKAN DI ATAS FILE, setelah deklarasi variabel lain
 let originalStudentStatus = ""; // Untuk tracking status awal saat edit
+let sortConfig = { key: 'row', direction: 'desc' }; // default: row terbesar di atas
 
 /* ===============================
    INIT
@@ -47,7 +48,7 @@ async function initDatamahasiswa() {
 /* ===============================
    LOAD DATA (OPTIMIZED)
 ================================= */
-async function loadStudentsFromAPI() {
+async function loadStudentsFromAPI(page = 1, sort = null, search = "") {
   try {
     const response = await fetch(`${API_URL}&action=getAll`);
     const result = await response.json();
@@ -82,16 +83,46 @@ async function loadStudentsFromAPI() {
         cuti_history: s.cuti_history || "",
       }));
 
-      // 🔥 TAMBAHKAN INI: Urutkan data terbaru (row terbesar) di paling atas
-      students.sort((a, b) => parseInt(b.row) - parseInt(a.row));
+      // 🔥 Apply sort jika ada parameter
+      if (sort) {
+        sortConfig = sort;
+        applySortConfig();
+      } else {
+        // Default: row terbesar di atas
+        students.sort((a, b) => parseInt(b.row) - parseInt(a.row));
+        sortConfig = { key: 'row', direction: 'desc' };
+      }
 
-      renderStudentTable(1);
+      // 🔥 Restore search filter jika ada
+      if (search && document.getElementById("searchStudent")) {
+        document.getElementById("searchStudent").value = search;
+      }
+
+      renderStudentTable(page); // ← Gunakan page yang disimpan!
     }
   } catch (error) {
     console.error("Load Error:", error);
   }
 }
-
+// 🔥 Fungsi bantu untuk apply sort config ke array students
+function applySortConfig() {
+  const { key, direction } = sortConfig;
+  
+  students.sort((a, b) => {
+    let valA = a[key]?.toString().toLowerCase() || '';
+    let valB = b[key]?.toString().toLowerCase() || '';
+    
+    if (key === 'row' || key === 'semester') {
+      valA = parseInt(a[key]) || 0;
+      valB = parseInt(b[key]) || 0;
+      return direction === 'asc' ? valA - valB : valB - valA;
+    }
+    
+    if (valA < valB) return direction === 'asc' ? -1 : 1;
+    if (valA > valB) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
 /* ===============================
    RENDER TABLE (FAST)
 ================================= */
@@ -364,6 +395,11 @@ async function handleStudentSubmit(e) {
 
   if (submitBtn.disabled) return;
 
+  // 🔥 SIMPAN halaman & config sort sebelum submit
+  const savedPage = currentPageNum;
+  const savedSort = { ...sortConfig };
+  const savedSearch = document.getElementById("searchStudent")?.value || "";
+
   const entryYear = parseInt(document.getElementById('studentEntryDate').value);
   const status = document.getElementById('studentStatus').value;
   const savedSemester = document.getElementById('semesterValue')?.value || "";
@@ -445,7 +481,7 @@ async function handleStudentSubmit(e) {
       throw new Error(result.error || "Gagal menyimpan data");
     }
 
-    await loadStudentsFromAPI();
+    await loadStudentsFromAPI(savedPage, savedSort, savedSearch);
     closeStudentModal();
     originalStudentStatus = ""; // ✅ Reset setelah save
     alert(row ? "✅ Data mahasiswa berhasil diupdate!" : "✅ Data mahasiswa berhasil ditambahkan!");
@@ -1379,5 +1415,24 @@ async function updateSemesterField() {
   }
 }
 
+
+function sortTable(key) {
+  if (sortConfig.key === key) {
+    sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortConfig.key = key;
+    sortConfig.direction = key === 'row' ? 'desc' : 'asc';
+  }
+
+  // Update icon
+  document.querySelectorAll('[id^="sort-"]').forEach(el => el.textContent = '↕️');
+  const icon = document.getElementById(`sort-${key}`);
+  if (icon) icon.textContent = sortConfig.direction === 'asc' ? '🔼' : '🔽';
+
+  // 🔥 Gunakan helper
+  applySortConfig();
+  
+  renderStudentTable(1);
+}
 
 
