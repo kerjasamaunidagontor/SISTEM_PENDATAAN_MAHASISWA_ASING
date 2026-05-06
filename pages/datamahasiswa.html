@@ -39,19 +39,21 @@
         <thead class="bg-gray-50">
           <tr>
             <th class="px-4 py-3 text-left font-medium text-gray-600">No</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-600">
-              Nama Lengkap
-            </th>
+            <!-- Contoh untuk kolom "Nama Lengkap" -->
+<th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer select-none"
+    onclick="sortTable('nama')">
+  Nama Lengkap <span id="sort-nama">↕️</span>
+</th>
             <th class="px-4 py-3 text-left font-medium text-gray-600">NIM</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-600">
-              Negara Asal
-            </th>
-            <th class="px-4 py-3 text-left font-medium text-gray-600">
-              Program Studi
-            </th>
-            <th class="px-4 py-3 text-left font-medium text-gray-600">
-              Status
-            </th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer" onclick="sortTable('negara')">
+      Negara Asal <span id="sort-negara">↕️</span>
+    </th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer" onclick="sortTable('prodi')">
+      Program Studi <span id="sort-prodi">↕️</span>
+    </th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer" onclick="sortTable('status_beasiswa')">
+      Status <span id="sort-status_beasiswa">↕️</span>
+    </th>
             <th class="px-4 py-3 text-left font-medium text-gray-600">Aksi</th>
           </tr>
         </thead>
