@@ -10,12 +10,14 @@ const itemsPerPage = 20; // 🔥 jangan 100
 // 🔥 TAMBAHKAN DI ATAS FILE, setelah deklarasi variabel lain
 let originalStudentStatus = ""; // Untuk tracking status awal saat edit
 let sortConfig = { key: 'row', direction: 'desc' }; // default: row terbesar di atas
+let activeStatusFilter = ""; // null = semua status ditampilkan
 
 /* ===============================
    INIT
 ================================= */
 async function initDatamahasiswa() {
   students = [];
+  activeStatusFilter = ""; // ✅ Reset filter saat init
 
   await loadStudentsFromAPI();
   await loadCountryDropdown();
@@ -99,6 +101,7 @@ async function loadStudentsFromAPI(page = 1, sort = null, search = "") {
       }
 
       renderStudentTable(page); // ← Gunakan page yang disimpan!
+      renderStatusCards();
     }
   } catch (error) {
     console.error("Load Error:", error);
@@ -399,6 +402,7 @@ async function handleStudentSubmit(e) {
   const savedPage = currentPageNum;
   const savedSort = { ...sortConfig };
   const savedSearch = document.getElementById("searchStudent")?.value || "";
+  const savedStatus = activeStatusFilter; // ✅ Simpan status filter
 
   const entryYear = parseInt(document.getElementById('studentEntryDate').value);
   const status = document.getElementById('studentStatus').value;
@@ -482,6 +486,11 @@ async function handleStudentSubmit(e) {
     }
 
     await loadStudentsFromAPI(savedPage, savedSort, savedSearch);
+
+    // 🔥 Restore status filter setelah reload
+activeStatusFilter = savedStatus;
+renderStatusCards();
+
     closeStudentModal();
     originalStudentStatus = ""; // ✅ Reset setelah save
     alert(row ? "✅ Data mahasiswa berhasil diupdate!" : "✅ Data mahasiswa berhasil ditambahkan!");
@@ -1434,5 +1443,101 @@ function sortTable(key) {
   
   renderStudentTable(1);
 }
+/* ===============================
+   STATUS FILTER & CARDS
+================================= */
 
+
+// 🔥 Hitung & Render Summary Cards
+// 🔥 Hitung & Render Summary Cards dengan Animasi
+function renderStatusCards() {
+  const statuses = ['aktif', 'nonaktif', 'cuti', 'lulus', 'martikulasi'];
+  
+  statuses.forEach(status => {
+    const count = students.filter(s => 
+      (s.status_beasiswa || "").toLowerCase() === status
+    ).length;
+    
+    const countEl = document.getElementById(`count-${status}`);
+    const cardEl = document.getElementById(`card-${status}`);
+    
+    // ✅ Animate counter jika ada perubahan
+    if (countEl && parseInt(countEl.textContent) !== count) {
+      countEl.textContent = count;
+      countEl.classList.remove('count-animate');
+      void countEl.offsetWidth; // Trigger reflow
+      countEl.classList.add('count-animate');
+    }
+    
+    // Highlight card jika sedang difilter
+    if (cardEl) {
+      if (activeStatusFilter === status) {
+        cardEl.classList.add('card-active');
+      } else {
+        cardEl.classList.remove('card-active');
+      }
+    }
+  });
+  
+  // Tampilkan badge filter jika ada status aktif
+  const badge = document.getElementById('statusFilterBadge');
+  const activeLabel = document.getElementById('activeStatusFilter');
+  
+  if (badge && activeLabel) {
+    if (activeStatusFilter) {
+      badge.classList.remove('hidden');
+      // Capitalize first letter
+      const statusMap = {
+        'aktif': 'Aktif',
+        'nonaktif': 'Non-Aktif',
+        'cuti': 'Cuti',
+        'lulus': 'Lulus',
+        'martikulasi': 'Martikulasi'
+      };
+      activeLabel.textContent = statusMap[activeStatusFilter] || activeStatusFilter;
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+}
+
+// 🔥 Filter table by status
+function filterByStatus(status) {
+  activeStatusFilter = status === activeStatusFilter ? "" : status; // toggle
+  renderStatusCards(); // update highlight
+  renderStudentTable(1); // reset ke page 1
+}
+
+// 🔥 Clear status filter
+function clearStatusFilter() {
+  activeStatusFilter = "";
+  renderStatusCards();
+  renderStudentTable(1);
+}
+
+// 🔥 Update getFilteredStudents() untuk support status filter
+function getFilteredStudents() {
+  const keyword = document.getElementById("searchStudent")?.value?.toLowerCase().trim() || "";
+  
+  return students.filter((s) => {
+    // ✅ Filter by status (jika ada)
+    if (activeStatusFilter && (s.status_beasiswa || "").toLowerCase() !== activeStatusFilter) {
+      return false;
+    }
+    
+    // ✅ Filter by search keyword
+    const name = String(s.nama || "").toLowerCase();
+    const nim = String(s.nim || "").toLowerCase();
+    const negara = String(s.negara || "").toLowerCase();
+    const prodi = String(s.prodi || "").toLowerCase();
+
+    return (
+      !keyword ||
+      name.includes(keyword) ||
+      nim.includes(keyword) ||
+      negara.includes(keyword) ||
+      prodi.includes(keyword)
+    );
+  });
+}
 
