@@ -1832,3 +1832,8 @@ textarea,
     min-height: 200px;
   }
 }
+/* Tambahkan di CSS */
+th.cursor-pointer:hover {
+  background-color: #f3f4f6; /* gray-100 */
+  transition: background 0.2s;
+}
