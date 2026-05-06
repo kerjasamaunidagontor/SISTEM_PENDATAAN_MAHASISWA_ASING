@@ -1,0 +1,533 @@
+<!-- Data Mahasiswa Content -->
+<div class="space-y-6">
+  <!-- Summary Cards -->
+<!-- Summary Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+  <!-- Aktif -->
+  <div onclick="filterByStatus('aktif')" 
+       class="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-5 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:-translate-y-1"
+       id="card-aktif">
+    <div class="absolute top-0 right-0 -mt-2 -mr-2 w-20 h-20 bg-white opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <span class="text-white/80 text-xs font-medium bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Active</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="count-aktif">0</div>
+      <div class="text-emerald-100 text-sm font-medium">Mahasiswa Aktif</div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-300 to-teal-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+  </div>
+
+  <!-- Non-Aktif -->
+  <div onclick="filterByStatus('nonaktif')" 
+       class="group relative overflow-hidden bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl p-5 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:-translate-y-1"
+       id="card-nonaktif">
+    <div class="absolute top-0 right-0 -mt-2 -mr-2 w-20 h-20 bg-white opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <span class="text-white/80 text-xs font-medium bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Inactive</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="count-nonaktif">0</div>
+      <div class="text-rose-100 text-sm font-medium">Non-Aktif</div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-300 to-pink-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+  </div>
+
+  <!-- Cuti -->
+  <div onclick="filterByStatus('cuti')" 
+       class="group relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:-translate-y-1"
+       id="card-cuti">
+    <div class="absolute top-0 right-0 -mt-2 -mr-2 w-20 h-20 bg-white opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <span class="text-white/80 text-xs font-medium bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">On Leave</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="count-cuti">0</div>
+      <div class="text-amber-100 text-sm font-medium">Sedang Cuti</div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-300 to-orange-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+  </div>
+
+  <!-- Lulus -->
+  <div onclick="filterByStatus('lulus')" 
+       class="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-5 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:-translate-y-1"
+       id="card-lulus">
+    <div class="absolute top-0 right-0 -mt-2 -mr-2 w-20 h-20 bg-white opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+          </svg>
+        </div>
+        <span class="text-white/80 text-xs font-medium bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Graduated</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="count-lulus">0</div>
+      <div class="text-blue-100 text-sm font-medium">Lulus</div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-300 to-indigo-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+  </div>
+
+  <!-- Martikulasi -->
+  <div onclick="filterByStatus('martikulasi')" 
+       class="group relative overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl p-5 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:-translate-y-1"
+       id="card-martikulasi">
+    <div class="absolute top-0 right-0 -mt-2 -mr-2 w-20 h-20 bg-white opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-2">
+        <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <span class="text-white/80 text-xs font-medium bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Prep</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="count-martikulasi">0</div>
+      <div class="text-violet-100 text-sm font-medium">Martikulasi</div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-300 to-purple-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+  </div>
+</div>
+
+<!-- Filter Badge dengan Design Modern -->
+<div id="statusFilterBadge" class="hidden mb-6">
+  <div class="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full text-white shadow-lg transform transition-all duration-300 hover:scale-105">
+    <span class="flex items-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+      </svg>
+      <span class="text-sm font-medium">Filter Aktif:</span>
+      <strong id="activeStatusFilter" class="text-white font-semibold bg-white/20 px-3 py-1 rounded-full">-</strong>
+    </span>
+    <button onclick="clearStatusFilter()" 
+            class="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors duration-200">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+  <!-- Search & Filter -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="flex flex-col md:flex-row gap-4">
+      <input
+        type="text"
+        id="searchStudent"
+        placeholder="Cari ..."
+        class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <button
+        onclick="openStudentModal()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        ➕ Tambah Data
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-wrap gap-2 justify-end mt-3">
+    <button onclick="downloadStudentCSV()" class="btn-export btn-green">
+      📄 CSV
+    </button>
+
+    <button onclick="downloadStudentExcel()" class="btn-export btn-blue">
+      📊 Excel
+    </button>
+
+    <button onclick="downloadStudentPDF()" class="btn-export btn-red">
+      📑 PDF
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left font-medium text-gray-600">No</th>
+            <!-- Contoh untuk kolom "Nama Lengkap" -->
+<th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer select-none"
+    onclick="sortTable('nama')">
+  Nama Lengkap <span id="sort-nama">↕️</span>
+</th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600">NIM</th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer" onclick="sortTable('negara')">
+      Negara Asal <span id="sort-negara">↕️</span>
+    </th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer" onclick="sortTable('prodi')">
+      Program Studi <span id="sort-prodi">↕️</span>
+    </th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer" onclick="sortTable('status_beasiswa')">
+      Status <span id="sort-status_beasiswa">↕️</span>
+    </th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody" class="divide-y">
+          <!-- Dynamic rows from JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="px-4 py-3 border-t flex items-center justify-between">
+      <p class="text-sm text-gray-500">
+        Menampilkan <span id="showingStart">1</span>-<span id="showingEnd"
+          >10</span
+        >
+        dari <span id="totalRecords">0</span> data
+      </p>
+      <div class="flex gap-2" id="pagination">
+        <!-- Dynamic pagination buttons -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tambah/Edit Student -->
+<div
+  id="studentModal"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl"
+  >
+    <!-- HEADER -->
+    <div
+      class="px-6 py-4 border-b flex items-center justify-between bg-gray-50 rounded-t-2xl"
+    >
+      <h3 class="font-semibold text-lg" id="modalTitle">Tambah Mahasiswa</h3>
+      <button
+        onclick="closeStudentModal()"
+        class="text-gray-400 hover:text-red-500 text-2xl"
+      >
+        &times;
+      </button>
+    </div>
+
+    <form id="studentForm" class="p-6 space-y-8">
+      <input type="hidden" id="studentId" />
+
+      <!-- 🔥 TAMBAHKAN INI DI SINI -->
+  <input type="hidden" id="martikulasiHistory" name="martikulasiHistory" value="">
+<input type="hidden" id="firstActivationDate" name="firstActivationDate" value="">
+<!-- 🔥 TAMBAH INI -->
+<input type="hidden" id="cutiStartDate" name="cutiStartDate" value="">
+<input type="hidden" id="cutiHistory" name="cutiHistory" value="">
+  
+    
+
+      <!-- ================= DATA UTAMA ================= -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          Data Utama
+        </h4>
+
+        <div class="grid md:grid-cols-2 gap-5">
+          <div>
+            <label class="label">Nama Lengkap</label>
+            <input type="text" id="studentName" class="input" />
+          </div>
+
+          <div>
+            <label class="label">NIM</label>
+            <input type="text" id="studentNim" class="input" />
+          </div>
+
+          <div>
+            <label class="label">Negara</label>
+            <select id="studentCountry" class="input">
+              <option value="">-- Pilih Negara --</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="label">Program Studi</label>
+            <select id="studentProdi" class="input">
+              <option value="">-- Pilih Program Studi --</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="label">Tahun Masuk</label>
+            <select id="studentEntryDate" class="input">
+              <option value="">-- Pilih Tahun --</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="label">SIAKAD</label>
+            <select id="studentStatus" class="input">
+              <option value="aktif">Aktif</option>
+              <option value="cuti">Cuti</option>
+              <option value="lulus">Lulus</option>
+              <option value="nonaktif">Non-Aktif</option>
+              <option value="martikulasi">Martikulasi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= DATA AKADEMIK ================= -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          Data Akademik
+        </h4>
+
+        <div class="grid md:grid-cols-3 gap-5">
+          <div>
+            <label class="label">Kampus</label>
+            <select id="kampus" class="input">
+              <option value="">-- Pilih Kampus--</option>
+              <option value="KAMPUS A">KAMPUS A</option>
+              <option value="KAMPUS B">KAMPUS B</option>
+              <option value="KAMPUS C">KAMPUS C</option>
+              <option value="KAMPUS D">KAMPUS D</option>
+              <option value="KAMPUS E">KAMPUS E</option>
+              <option value="KAMPUS F">KAMPUS F</option>
+              <option value="KAMPUS G">KAMPUS G</option>
+              <option value="KAMPUS H">KAMPUS H</option>
+            </select>
+          </div>
+
+          <div>
+      <label class="label">Semester</label>
+      <!-- Field display (disabled) -->
+      <input type="text" id="semester" class="input bg-gray-50 cursor-not-allowed" readonly />
+      <!-- Hidden input untuk submit value -->
+      <input type="hidden" id="semesterValue" name="semester" />
+    </div>
+
+          <div>
+            <label for="fakultas" class="label">Fakultas</label>
+            <select id="fakultas" class="input">
+              <option value="">Pilih Fakultas</option>
+
+              <option value="Fakultas Humaniora">Fakultas Humaniora</option>
+              <option value="Fakultas Ekonomi Manajemen">
+                Fakultas Ekonomi Manajemen
+              </option>
+              <option value="Fakultas Tarbiyah">Fakultas Tarbiyah</option>
+              <option value="Fakultas Ushuluddin">Fakultas Ushuluddin</option>
+              <option value="Fakultas Syariah">Fakultas Syariah</option>
+              <option value="Fakultas Sains dan Teknologi">
+                Fakultas Sains dan Teknologi
+              </option>
+              <option value="Fakultas Kedokteran">Fakultas Kedokteran</option>
+              <option value="Fakultas Ilmu Kesehatan">
+                Fakultas Ilmu Kesehatan
+              </option>
+
+              <option value="Program Pascasarjana">Program Pascasarjana</option>
+              <option value="Universitas">Universitas</option>
+              <option value="Pusat Pendidikan dan Pelatihan">
+                Pusat Pendidikan dan Pelatihan
+              </option>
+              <option value="Direktorat Islamisasi">
+                Direktorat Islamisasi
+              </option>
+              <option value="Satuan Kerja">Satuan Kerja</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="label">Jenis Kelamin</label>
+            <select id="jenis_kelamin" class="input">
+              <option value="">-- Pilih Jenis Kelamin--</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <div>
+  <label class="label">Status Beasiswa</label>
+  <select id="siakad" class="input">
+    <option value="">-- Pilih Status Beasiswa--</option>
+    <option value="Regular">Regular</option>
+    <option value="Scholarship">Scholarship</option>
+  </select>
+</div>
+        </div>
+      </div>
+
+      <!-- ================= DOKUMEN LEGAL ================= -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          Dokumen Legal
+        </h4>
+
+        <div class="grid md:grid-cols-3 gap-5">
+          <div>
+            <label class="label">Passport Expired</label>
+            <input type="date" id="passport_expired" class="input" />
+          </div>
+
+          <div>
+            <label class="label">Status Passport</label>
+            <select id="status_passport" class="input" disabled>
+              
+            </select>
+          </div>
+
+          <div>
+            <label class="label">ITAS Expired</label>
+            <input type="date" id="itas_expired" class="input" />
+          </div>
+
+          <div>
+            <label class="label">Status ITAS</label>
+            <select id="status_itas" class="input" disabled>
+              
+            </select>
+          </div>
+
+          <div>
+            <label class="label">Guarantor</label>
+            <input type="text" id="guarantor" class="input" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= FILE GOOGLE DRIVE ================= -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          File Google Drive
+        </h4>
+
+        <div class="space-y-4">
+          <input
+            type="url"
+            id="foto"
+            placeholder="Link Foto Mahasiswa"
+            class="input"
+          />
+          <input
+            type="url"
+            id="file_passport"
+            placeholder="Link File Passport"
+            class="input"
+          />
+          <input
+            type="url"
+            id="file_itas"
+            placeholder="Link File ITAS"
+            class="input"
+          />
+          <input
+            type="url"
+            id="file_loa"
+            placeholder="Link File LOA"
+            class="input"
+          />
+        </div>
+      </div>
+
+      <!-- ================= BUTTON ================= -->
+      <div class="flex justify-end gap-3 pt-6 border-t">
+        <button
+          type="button"
+          onclick="closeStudentModal()"
+          class="px-5 py-2 rounded-lg border hover:bg-gray-50"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md"
+        >
+          Simpan Data
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- ================= MODAL VIEW STUDENT ================= -->
+<div
+  id="viewStudentModal"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl"
+  >
+    <!-- HEADER -->
+    <div
+      class="px-6 py-4 border-b flex items-center justify-between bg-gray-50 rounded-t-2xl"
+    >
+      <h3 class="font-semibold text-lg">Detail Mahasiswa</h3>
+      <button
+        onclick="closeViewStudent()"
+        class="text-gray-400 hover:text-red-500 text-2xl"
+      >
+        &times;
+      </button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="p-6 space-y-8 text-sm">
+      <!-- DATA UTAMA -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          Data Utama
+        </h4>
+        <div id="viewDataUtama" class="grid md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- DATA AKADEMIK -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          Data Akademik
+        </h4>
+        <div id="viewDataAkademik" class="grid md:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- DOKUMEN LEGAL -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          Dokumen Legal
+        </h4>
+        <div id="viewDataLegal" class="grid md:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- FILE DRIVE -->
+      <div>
+        <h4
+          class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide"
+        >
+          File Google Drive
+        </h4>
+        <div id="viewDataFiles" class="space-y-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
