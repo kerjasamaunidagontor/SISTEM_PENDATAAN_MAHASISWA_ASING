@@ -63,78 +63,108 @@
     ></div>
 
     <!-- SIDEBAR -->
-    <aside
-      id="sidebar"
-      class="fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-blue-700 to-blue-900 text-white z-40 overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300"
-    >
-      <!-- BRAND -->
-      <a
-        href="#"
-        onclick="loadPage('dashboard')"
-        class="block p-5 border-b border-blue-600 hover:bg-blue-800/30 transition"
-      >
-        <div class="flex items-center gap-3">
-          <img
-            src="assets/img/logo unida.png"
-            alt="Logo Universitas"
-            class="w-10 h-10 object-contain bg-white rounded-full p-1"
-          />
-          <div class="leading-tight">
-            <div class="font-bold text-lg">INTERNATIONAL</div>
-            <p class="text-sm font-normal opacity-80">Student Data System</p>
-          </div>
-        </div>
-      </a>
+<aside
+  id="sidebar"
+  class="fixed top-0 left-0 h-screen w-64 bg-slate-900 text-white z-40 overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-2xl"
+>
+  <!-- BRAND (Tetap menggunakan konten asli Anda, dengan styling yang lebih elegan) -->
+  <a
+    href="#"
+    onclick="loadPage('dashboard')"
+    class="block p-5 border-b border-slate-700/50 hover:bg-slate-800/50 transition duration-300"
+  >
+    <div class="flex items-center gap-3">
+      <img
+        src="assets/img/logo unida.png"
+        alt="Logo Universitas"
+        class="w-10 h-10 object-contain bg-white rounded-full p-1 shadow-sm"
+      />
+      <div class="leading-tight">
+        <div class="font-bold text-lg text-white tracking-wide">INTERNATIONAL</div>
+        <p class="text-xs font-medium text-slate-400">Student Data System</p>
+      </div>
+    </div>
+  </a>
 
-      <!-- USER PROFILE -->
-      <div
-        class="px-4 py-5 border-b border-blue-500/40 flex items-center gap-3"
-      >
+  <!-- USER PROFILE -->
+  <div class="px-5 py-4 border-b border-slate-700/50">
+    <div class="flex items-center gap-3">
+      <div class="relative">
         <img
           src="assets/img/iconuser.png"
           alt="avatar"
-          class="w-11 h-11 rounded-full border-2 border-white/40"
+          class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover"
         />
-        <div class="leading-tight">
-          <p id="sidebarUsername" class="font-semibold text-sm text-white">
-            Admin
-          </p>
-          <span
-            id="sidebarRole"
-            class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800"
-            >Administrator</span
-          >
-        </div>
+        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-slate-900 rounded-full" title="Online"></span>
       </div>
+      <div class="leading-tight">
+        <p id="sidebarUsername" class="font-semibold text-sm text-white">
+          Admin
+        </p>
+        <span
+          id="sidebarRole"
+          class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-blue-600/80 text-white font-medium tracking-wide"
+        >Administrator</span>
+      </div>
+    </div>
+  </div>
 
-      <!-- NAVIGATION -->
-      <nav class="p-4 space-y-2 text-sm">
-        <a
-          onclick="loadPage('dashboard')"
-          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
-        >
-          📊 Dashboard
-        </a>
-        <a
-          onclick="loadPage('datamahasiswa')"
-          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
-        >
-          👥 Data Mahasiswa
-        </a>
-        <a
-          onclick="loadPage('mobility')"
-          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
-        >
-          ✈️ Mobilitas Internasional
-        </a>
-        <a
-          onclick="loadPage('penerimaan')"
-          class="menu-link flex p-3 rounded hover:bg-blue-800/40 transition cursor-pointer"
-        >
-          📥 Data Penerimaan Baru
-        </a>
-      </nav>
-    </aside>
+  <!-- NAVIGATION (Menu tetap sama, diganti emoji dengan SVG agar lebih elegan & profesional) -->
+  <nav class="p-3 space-y-1 text-sm mt-2">
+    <a
+      onclick="loadPage('dashboard')"
+      class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-200 cursor-pointer group"
+    >
+      <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+      </svg>
+      <span>Dashboard</span>
+    </a>
+    
+    <a
+      onclick="loadPage('datamahasiswa')"
+      class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-200 cursor-pointer group"
+    >
+      <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+      </svg>
+      <span>Data Mahasiswa</span>
+    </a>
+    
+    <a
+      onclick="loadPage('mobility')"
+      class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-200 cursor-pointer group"
+    >
+      <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <span>Mobilitas Internasional</span>
+    </a>
+    
+    <a
+      onclick="loadPage('penerimaan')"
+      class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-200 cursor-pointer group"
+    >
+      <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+      </svg>
+      <span>Data Penerimaan Baru</span>
+    </a>
+  </nav>
+
+  <!-- LOGOUT SECTION (Dipindah ke bawah agar rapi) -->
+  <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 bg-slate-900">
+    <button
+      onclick="logout()"
+      class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-all duration-200 cursor-pointer group"
+    >
+      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+      </svg>
+      <span class="font-medium">Logout</span>
+    </button>
+  </div>
+</aside>
 
     <!-- MAIN CONTENT -->
     <main class="md:ml-64 min-h-screen">
@@ -255,3 +285,55 @@
     <script src="assets/js/penerimaan.js"></script>
   </body>
 </html>
+
+<style>
+  /* Elegant Dark Sidebar Theme */
+#sidebar {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+}
+
+#sidebar .menu-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#sidebar .menu-link:hover {
+  background: rgba(30, 41, 59, 0.8);
+  transform: translateX(4px);
+}
+
+#sidebar .menu-link.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-left: 3px solid #3b82f6;
+}
+
+#sidebar .menu-link.active svg {
+  color: #60a5fa;
+}
+
+/* Scrollbar Styling */
+#sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Topbar adjustment */
+header {
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(10px);
+}
+</style>
