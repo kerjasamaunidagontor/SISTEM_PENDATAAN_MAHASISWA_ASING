@@ -1,24 +1,77 @@
 <!-- Data Penerimaan Mahasiswa Asing Baru -->
 <div class="space-y-6">
   <!-- Stats Overview -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div class="bg-white rounded-xl shadow p-5 text-center">
-      <p class="text-3xl font-bold text-blue-600" id="pendingCount">0</p>
-      <p class="text-sm text-gray-500">Menunggu Verifikasi</p>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  
+  <!-- Menunggu Verifikasi -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <!-- Elegant Icon Container -->
+    <div class="absolute top-4 right-4">
+      <div class="relative">
+        <div class="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+        <div class="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+          <span class="material-icons text-white/80 text-3xl drop-shadow-lg">schedule</span>
+        </div>
+      </div>
     </div>
-    <div class="bg-white rounded-xl shadow p-5 text-center">
-      <p class="text-3xl font-bold text-green-600" id="verifiedCount">0</p>
-      <p class="text-sm text-gray-500">Terverifikasi</p>
-    </div>
-    <div class="bg-white rounded-xl shadow p-5 text-center">
-      <p class="text-3xl font-bold text-orange-600" id="processCount">0</p>
-      <p class="text-sm text-gray-500">Dalam Proses</p>
-    </div>
-    <div class="bg-white rounded-xl shadow p-5 text-center">
-      <p class="text-3xl font-bold text-purple-600" id="acceptedCount">0</p>
-      <p class="text-sm text-gray-500">Diterima</p>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="pendingCount">0</p>
+      <p class="text-amber-50 font-medium text-sm">Menunggu Verifikasi</p>
     </div>
   </div>
+
+  <!-- Terverifikasi -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <!-- Elegant Icon Container -->
+    <div class="absolute top-4 right-4">
+      <div class="relative">
+        <div class="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+        <div class="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+          <span class="material-icons text-white/80 text-3xl drop-shadow-lg">verified</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="verifiedCount">0</p>
+      <p class="text-emerald-50 font-medium text-sm">Terverifikasi</p>
+    </div>
+  </div>
+
+  <!-- Dalam Proses -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-400 to-orange-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <!-- Elegant Icon Container -->
+    <div class="absolute top-4 right-4">
+      <div class="relative">
+        <div class="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+        <div class="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+          <span class="material-icons text-white/80 text-3xl drop-shadow-lg">autorenew</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="processCount">0</p>
+      <p class="text-orange-50 font-medium text-sm">Dalam Proses</p>
+    </div>
+  </div>
+
+  <!-- Diterima -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <!-- Elegant Icon Container -->
+    <div class="absolute top-4 right-4">
+      <div class="relative">
+        <div class="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+        <div class="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+          <span class="material-icons text-white/80 text-3xl drop-shadow-lg">how_to_reg</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="acceptedCount">0</p>
+      <p class="text-blue-50 font-medium text-sm">Diterima</p>
+    </div>
+  </div>
+
+</div>
 
   <!-- Filter & Import + Upload Excel -->
   <div class="bg-white rounded-xl shadow p-4 space-y-4">
