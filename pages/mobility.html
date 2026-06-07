@@ -1,26 +1,63 @@
 <!-- Mobilitas Internasional Content -->
 <div class="space-y-6">
   <!-- Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div
-      class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow p-5 text-white"
-    >
-      <p class="text-sm opacity-90">Program Keluar</p>
-      <p class="text-2xl font-bold" id="outboundCount">0</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  
+  <!-- Program Keluar -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <div class="absolute top-4 right-4">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
+        Outbound
+      </span>
     </div>
-    <div
-      class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow p-5 text-white"
-    >
-      <p class="text-sm opacity-90">Program Masuk</p>
-      <p class="text-2xl font-bold" id="inboundCount">0</p>
+    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+      </svg>
     </div>
-    <div
-      class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow p-5 text-white"
-    >
-      <p class="text-sm opacity-90">Total Mitra</p>
-      <p class="text-2xl font-bold" id="partnerCount">0</p>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="outboundCount">0</p>
+      <p class="text-blue-50 font-medium text-sm">Program Keluar</p>
     </div>
   </div>
+
+  <!-- Program Masuk -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <div class="absolute top-4 right-4">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
+        Inbound
+      </span>
+    </div>
+    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+      </svg>
+    </div>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="inboundCount">0</p>
+      <p class="text-emerald-50 font-medium text-sm">Program Masuk</p>
+    </div>
+  </div>
+
+  <!-- Total Mitra -->
+  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-400 to-purple-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+    <div class="absolute top-4 right-4">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
+        Partners
+      </span>
+    </div>
+    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+      </svg>
+    </div>
+    <div>
+      <p class="text-4xl font-bold text-white mb-1" id="partnerCount">0</p>
+      <p class="text-purple-50 font-medium text-sm">Total Mitra</p>
+    </div>
+  </div>
+
+</div>
 
   <!-- Calendar & List -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
