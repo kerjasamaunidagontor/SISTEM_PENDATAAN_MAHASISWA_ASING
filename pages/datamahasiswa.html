@@ -162,6 +162,7 @@
         <thead class="bg-gray-50">
           <tr>
             <th class="px-4 py-3 text-left font-medium text-gray-600">No</th>
+            <th class="px-4 py-3 text-left font-medium text-gray-600">Foto</th>
             <!-- Contoh untuk kolom "Nama Lengkap" -->
 <th class="px-4 py-3 text-left font-medium text-gray-600 cursor-pointer select-none"
     onclick="sortTable('nama')">
@@ -528,6 +529,32 @@
         </h4>
         <div id="viewDataFiles" class="space-y-2"></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Foto Besar -->
+<div id="photoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[60] p-4" onclick="closePhotoModal(event)">
+  <div class="relative max-w-5xl max-h-[90vh] w-full flex items-center justify-center">
+    <!-- Close Button -->
+    <button onclick="closePhotoModal()" 
+            class="absolute -top-12 right-0 text-white hover:text-gray-300 text-3xl transition z-10">
+      &times;
+    </button>
+    
+    <!-- Info -->
+    <div class="absolute -bottom-10 left-0 right-0 text-center text-white">
+      <h3 id="photoModalName" class="text-lg font-semibold"></h3>
+      <p id="photoModalNim" class="text-sm text-gray-300"></p>
+    </div>
+    
+    <!-- Image Container -->
+    <div class="relative bg-white rounded-lg overflow-hidden shadow-2xl max-h-[85vh]">
+      <img id="photoModalImage" 
+           src="" 
+           alt="" 
+           class="max-h-[85vh] max-w-full object-contain"
+           onclick="event.stopPropagation()">
     </div>
   </div>
 </div>
