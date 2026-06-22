@@ -127,7 +127,55 @@ function applySortConfig() {
   });
 }
 /* ===============================
-   RENDER TABLE (FAST)
+   HELPER: Convert Google Drive Link - IMPROVED
+================================= */
+function getGoogleDriveImageUrl(driveUrl) {
+  if (!driveUrl || driveUrl.trim() === '') return null;
+  
+  // Bersihkan URL dari spasi
+  driveUrl = driveUrl.trim();
+  
+  // Extract file ID dari berbagai format link Google Drive
+  let fileId = null;
+  
+  // Format 1: https://drive.google.com/file/d/FILE_ID/view
+  // Format 2: https://drive.google.com/file/d/FILE_ID/preview
+  const match1 = driveUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match1) fileId = match1[1];
+  
+  // Format 3: https://drive.google.com/open?id=FILE_ID
+  // Format 4: https://drive.google.com/uc?id=FILE_ID
+  if (!fileId) {
+    const match2 = driveUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (match2) fileId = match2[1];
+  }
+  
+  // Format 5: https://drive.google.com/thumbnail?id=FILE_ID
+  if (!fileId) {
+    const match3 = driveUrl.match(/thumbnail\?id=([a-zA-Z0-9_-]+)/);
+    if (match3) fileId = match3[1];
+  }
+  
+  // Format 6: Direct file ID (jika user hanya paste ID)
+  if (!fileId && driveUrl.length > 20 && !driveUrl.includes('http')) {
+    fileId = driveUrl;
+  }
+  
+  if (fileId) {
+    // Gunakan thumbnail endpoint untuk hasil lebih baik
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+  }
+  
+  // Jika bukan link Google Drive, kembalikan asumsi sebagai URL langsung
+  if (driveUrl.match(/^https?:\/\//)) {
+    return driveUrl;
+  }
+  
+  return null;
+}
+
+/* ===============================
+   RENDER TABLE (FAST) - IMPROVED
 ================================= */
 function renderStudentTable(page = 1) {
   const tbody = document.getElementById("studentTableBody");
@@ -143,38 +191,77 @@ function renderStudentTable(page = 1) {
 
   for (let i = 0; i < paginated.length; i++) {
     const s = paginated[i];
-    
-    // ✅ HAPUS auto-calc di sini, tidak perlu
-    // Langsung tampilkan data dari database
     const displaySemester = s.semester || '-';
+    
+    // Convert Google Drive link ke direct image URL
+    const fotoUrl = getGoogleDriveImageUrl(s.foto);
+    
+    // Placeholder SVG yang lebih baik
+    const placeholderSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23e5e7eb'%3E%3Crect width='24' height='24' rx='12'/%3E%3Cpath fill='%239ca3af' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E`;
 
     html += `
-      <tr>
-        <td>${start + i + 1}</td>
-        <td>${s.nama}</td>
-        <td>${s.nim}</td>
-        <td>${s.negara}</td>
-        <td>${s.prodi}</td>
-        <td>${s.status_beasiswa || "-"}</td>
-        <td class="space-x-2">
-          <button 
-            onclick="viewStudent(${s.row})"
-            class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Detail
-          </button>
-          <button 
-            onclick="editStudent(${s.row})"
-            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600"
-          >
-            Edit
-          </button>
-          <button 
-            onclick="deleteStudent(${s.row})"
-            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Hapus
-          </button>
+      <tr class="hover:bg-gray-50 transition-colors">
+        <td class="px-4 py-3 text-center">${start + i + 1}</td>
+        <td class="px-4 py-3">
+          <div class="relative w-12 h-12 mx-auto">
+            ${fotoUrl ? `
+  <img src="${fotoUrl}" 
+       alt="${s.nama}" 
+       onclick="showPhotoModal(${s.row})"
+       class="w-12 h-12 rounded-full object-cover border-2 border-blue-200 shadow-sm cursor-pointer hover:scale-110 hover:border-blue-400 hover:shadow-lg transition-all duration-200"
+       onerror="this.onerror=null; this.src='${placeholderSVG}'; this.classList.remove('border-blue-200'); this.classList.add('border-gray-300');"
+       loading="lazy"
+       style="min-width: 48px; min-height: 48px;"
+       title="Klik untuk lihat foto besar">
+` : `
+              <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-300">
+                <svg class="w-7 h-7 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+            `}
+          </div>
+        </td>
+        <td class="px-4 py-3 font-medium text-gray-900">${s.nama}</td>
+        <td class="px-4 py-3 font-mono text-sm">${s.nim}</td>
+        <td class="px-4 py-3">${s.negara}</td>
+        <td class="px-4 py-3">${s.prodi}</td>
+        <td class="px-4 py-3">
+          <span class="px-2 py-1 text-xs font-medium rounded-full ${
+            s.status_beasiswa === 'aktif' ? 'bg-green-100 text-green-800' :
+            s.status_beasiswa === 'cuti' ? 'bg-yellow-100 text-yellow-800' :
+            s.status_beasiswa === 'lulus' ? 'bg-blue-100 text-blue-800' :
+            s.status_beasiswa === 'nonaktif' ? 'bg-red-100 text-red-800' :
+            s.status_beasiswa === 'martikulasi' ? 'bg-purple-100 text-purple-800' :
+            'bg-gray-100 text-gray-800'
+          }">
+            ${s.status_beasiswa || "-"}
+          </span>
+        </td>
+        <td class="px-4 py-3">
+          <div class="flex gap-1">
+            <button 
+              onclick="viewStudent(${s.row})"
+              class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+              title="Lihat Detail"
+            >
+              👁
+            </button>
+            <button 
+              onclick="editStudent(${s.row})"
+              class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 transition"
+              title="Edit"
+            >
+              ✏
+            </button>
+            <button 
+              onclick="deleteStudent(${s.row})"
+              class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+              title="Hapus"
+            >
+              🗑
+            </button>
+          </div>
         </td>
       </tr>
     `;
@@ -199,6 +286,157 @@ function renderStudentTable(page = 1) {
 
   renderPagination(filtered.length);
 }
+/* ===============================
+   DEBUG: Test Google Drive Link
+================================= */
+function testGoogleDriveLink(url) {
+  console.log('Original URL:', url);
+  const converted = getGoogleDriveImageUrl(url);
+  console.log('Converted URL:', converted);
+  
+  // Test jika ada
+  if (converted) {
+    const img = new Image();
+    img.onload = () => console.log('✅ Image loaded successfully');
+    img.onerror = () => console.error('❌ Failed to load image');
+    img.src = converted;
+  }
+  
+  return converted;
+}
+/* ===============================
+   PHOTO MODAL FUNCTIONS - FINAL FIX
+================================= */
+function showPhotoModal(row) {
+  console.log('🔍 showPhotoModal called with row:', row);
+  
+  const student = students.find((s) => s.row == row);
+  if (!student) {
+    console.error('❌ Student not found');
+    return;
+  }
+  
+  const fotoUrl = getGoogleDriveImageUrl(student.foto);
+  if (!fotoUrl) {
+    alert('Foto tidak tersedia');
+    return;
+  }
+  
+  // 🔥 CEK APAKAH MODAL SUDAH ADA
+  let modal = document.getElementById('photoModal');
+  
+  // Jika belum ada, BUAT MODAL SECARA DINAMIS
+  if (!modal) {
+    console.log('📝 Creating photo modal dynamically...');
+    createPhotoModal();
+    modal = document.getElementById('photoModal');
+  }
+  
+  // Set data ke modal
+  const modalImage = document.getElementById('photoModalImage');
+  const modalName = document.getElementById('photoModalName');
+  const modalLink = document.getElementById('photoModalLink');
+  
+  if (modalImage && modalName) {
+    modalImage.src = fotoUrl;
+    modalImage.alt = student.nama;
+    modalName.textContent = student.nama;
+    
+    // Tampilkan link Google Drive jika ada
+    if (modalLink && student.foto) {
+      modalLink.href = student.foto;
+      modalLink.textContent = 'Lihat di Google Drive';
+      modalLink.style.display = 'inline';
+    }
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    
+    console.log('✅ Photo modal opened for:', student.nama);
+  } else {
+    console.error('❌ Modal elements not found even after creation');
+  }
+}
+
+// Fungsi untuk membuat modal secara dinamis
+function createPhotoModal() {
+  const modalHTML = `
+    <div id="photoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[60] p-4" onclick="closePhotoModal(event)">
+      <div class="relative max-w-4xl w-full flex flex-col items-center">
+        <!-- Close Button -->
+        <button onclick="closePhotoModal()" 
+                class="absolute -top-12 right-0 text-white hover:text-gray-300 text-4xl transition z-10 font-bold">
+          &times;
+        </button>
+        
+        <!-- Image Container -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-2xl max-h-[75vh] w-full">
+          <img id="photoModalImage" 
+               src="" 
+               alt="" 
+               class="max-h-[75vh] w-full object-contain"
+               onclick="event.stopPropagation()">
+        </div>
+        
+        <!-- Info Section -->
+        <div class="mt-6 text-center bg-white rounded-lg px-8 py-4 shadow-lg w-full max-w-2xl">
+          <h3 id="photoModalName" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+          <a id="photoModalLink" 
+             href="#" 
+             target="_blank" 
+             class="text-blue-600 hover:text-blue-800 underline text-sm"
+             style="display: none;">
+            Lihat di Google Drive
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Tambahkan modal ke body
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  console.log('✅ Photo modal created dynamically');
+}
+
+function closePhotoModal(event) {
+  const modal = document.getElementById('photoModal');
+  
+  if (!modal) {
+    console.error('Photo modal not found');
+    return;
+  }
+  
+  // Close if clicked on backdrop or close button
+  if (!event || event.target.id === 'photoModal' || event.target.tagName === 'BUTTON') {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
+    
+    // Clear image src
+    const modalImage = document.getElementById('photoModalImage');
+    if (modalImage) {
+      setTimeout(() => {
+        modalImage.src = '';
+      }, 300);
+    }
+  }
+}
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('photoModal');
+    if (modal && !modal.classList.contains('hidden')) {
+      closePhotoModal();
+    }
+  }
+});
 /* ===============================
    PAGINATION
 ================================= */
@@ -1540,4 +1778,3 @@ function getFilteredStudents() {
     );
   });
 }
-
