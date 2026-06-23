@@ -744,40 +744,173 @@ function viewStudent(row) {
   const student = students.find((s) => s.row == row);
   if (!student) return;
 
-  // DATA UTAMA
+  // Convert Google Drive image URL
+  const fotoUrl = getGoogleDriveImageUrl(student.foto);
+  const placeholderSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='%23e5e7eb'%3E%3Crect width='24' height='24' rx='12'/%3E%3Cpath fill='%239ca3af' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E`;
+
+  // DATA UTAMA - Dengan foto di kiri
   document.getElementById("viewDataUtama").innerHTML = `
-    <div><strong>Nama:</strong> ${student.nama}</div>
-    <div><strong>NIM:</strong> ${student.nim}</div>
-    <div><strong>Negara:</strong> ${student.negara}</div>
-    <div><strong>Prodi:</strong> ${student.prodi}</div>
-    <div><strong>Tahun Masuk:</strong> ${student.tahun_masuk}</div>
+    <div class="md:col-span-2 lg:col-span-1 border-r pr-0 lg:pr-6 mb-6 lg:mb-0">
+      <div class="flex flex-col items-center">
+        <div class="w-40 h-40 rounded-xl overflow-hidden border-4 border-blue-100 shadow-lg mb-4 bg-gray-100">
+          ${fotoUrl ? `
+            <img src="${fotoUrl}" 
+                 alt="${student.nama}" 
+                 class="w-full h-full object-cover"
+                 onerror="this.src='${placeholderSVG}'">
+          ` : `
+            <img src="${placeholderSVG}" alt="No Photo" class="w-full h-full object-cover">
+          `}
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 text-center mb-1">${student.nama}</h3>
+        <p class="text-gray-500 text-sm mb-2">${student.nim}</p>
+        <span class="px-3 py-1 text-xs font-medium rounded-full ${
+          student.status_beasiswa === 'aktif' ? 'bg-green-100 text-green-800' :
+          student.status_beasiswa === 'cuti' ? 'bg-yellow-100 text-yellow-800' :
+          student.status_beasiswa === 'lulus' ? 'bg-blue-100 text-blue-800' :
+          student.status_beasiswa === 'nonaktif' ? 'bg-red-100 text-red-800' :
+          'bg-purple-100 text-purple-800'
+        }">
+          ${student.status_beasiswa || "-"}
+        </span>
+      </div>
+    </div>
+    
+    <div class="md:col-span-2 lg:col-span-1 grid grid-cols-2 gap-4">
+      <div class="bg-gray-50 p-3 rounded-lg">
+        <p class="text-xs text-gray-500 mb-1">NIM</p>
+        <p class="font-semibold text-gray-800">${student.nim || "-"}</p>
+      </div>
+      <div class="bg-gray-50 p-3 rounded-lg">
+        <p class="text-xs text-gray-500 mb-1">Negara Asal</p>
+        <p class="font-semibold text-gray-800">${student.negara || "-"}</p>
+      </div>
+      <div class="bg-gray-50 p-3 rounded-lg">
+        <p class="text-xs text-gray-500 mb-1">Program Studi</p>
+        <p class="font-semibold text-gray-800 text-sm">${student.prodi || "-"}</p>
+      </div>
+      <div class="bg-gray-50 p-3 rounded-lg">
+        <p class="text-xs text-gray-500 mb-1">Tahun Masuk</p>
+        <p class="font-semibold text-gray-800">${student.tahun_masuk || "-"}</p>
+      </div>
+    </div>
   `;
 
   // DATA AKADEMIK
   document.getElementById("viewDataAkademik").innerHTML = `
-    <div><strong>Kampus:</strong> ${student.kampus || "-"}</div>
-    <div><strong>Semester:</strong> ${student.semester || "-"}</div>
-    <div><strong>Fakultas:</strong> ${student.fakultas || "-"}</div>
-    <div><strong>Jenis Kelamin:</strong> ${student.jenis_kelamin || "-"}</div>
-    <div><strong>Status Mahasiswa:</strong> ${student.siakad || "-"}</div>
-    <div><strong>Siakad:</strong> ${student.status_beasiswa || "-"}</div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Kampus</p>
+      <p class="font-semibold text-gray-800">${student.kampus || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Semester</p>
+      <p class="font-semibold text-gray-800">${student.semester || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Fakultas</p>
+      <p class="font-semibold text-gray-800 text-sm">${student.fakultas || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Jenis Kelamin</p>
+      <p class="font-semibold text-gray-800">${student.jenis_kelamin || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Status Mahasiswa</p>
+      <p class="font-semibold text-gray-800">${student.siakad || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Status Beasiswa</p>
+      <p class="font-semibold text-gray-800">${student.status_beasiswa || "-"}</p>
+    </div>
   `;
 
   // DOKUMEN LEGAL
   document.getElementById("viewDataLegal").innerHTML = `
-    <div><strong>Passport Expired:</strong> ${student.passport_expired || "-"}</div>
-    <div><strong>Status Passport:</strong> ${student.status_passport || "-"}</div>
-    <div><strong>ITAS Expired:</strong> ${student.itas_expired || "-"}</div>
-    <div><strong>Status ITAS:</strong> ${student.status_itas || "-"}</div>
-    <div><strong>Guarantor:</strong> ${student.guarantor || "-"}</div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Passport Expired</p>
+      <p class="font-semibold text-gray-800">${student.passport_expired || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Status Passport</p>
+      <p class="font-semibold text-gray-800">${student.status_passport || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">ITAS Expired</p>
+      <p class="font-semibold text-gray-800">${student.itas_expired || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <p class="text-xs text-gray-500 mb-1">Status ITAS</p>
+      <p class="font-semibold text-gray-800">${student.status_itas || "-"}</p>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-lg md:col-span-3">
+      <p class="text-xs text-gray-500 mb-1">Guarantor</p>
+      <p class="font-semibold text-gray-800">${student.guarantor || "-"}</p>
+    </div>
   `;
 
-  // FILE
+  // FILE DRIVE - Dengan tombol yang lebih baik
   document.getElementById("viewDataFiles").innerHTML = `
-    <div><strong>Foto:</strong> ${student.foto ? `<a href="${student.foto}" target="_blank" class="text-blue-600 underline">Lihat</a>` : "-"}</div>
-    <div><strong>Passport:</strong> ${student.file_passport ? `<a href="${student.file_passport}" target="_blank" class="text-blue-600 underline">Lihat</a>` : "-"}</div>
-    <div><strong>ITAS:</strong> ${student.file_itas ? `<a href="${student.file_itas}" target="_blank" class="text-blue-600 underline">Lihat</a>` : "-"}</div>
-    <div><strong>LOA:</strong> ${student.file_loa ? `<a href="${student.file_loa}" target="_blank" class="text-blue-600 underline">Lihat</a>` : "-"}</div>
+    <div class="grid md:grid-cols-2 gap-3">
+      ${student.foto ? `
+        <a href="${student.foto}" target="_blank" 
+           class="flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition group">
+          <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-blue-900 truncate">Foto Mahasiswa</p>
+            <p class="text-xs text-blue-600">Lihat File</p>
+          </div>
+        </a>
+      ` : ''}
+      
+      ${student.file_passport ? `
+        <a href="${student.file_passport}" target="_blank" 
+           class="flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition group">
+          <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-green-900 truncate">Passport</p>
+            <p class="text-xs text-green-600">Lihat File</p>
+          </div>
+        </a>
+      ` : ''}
+      
+      ${student.file_itas ? `
+        <a href="${student.file_itas}" target="_blank" 
+           class="flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition group">
+          <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-purple-900 truncate">ITAS</p>
+            <p class="text-xs text-purple-600">Lihat File</p>
+          </div>
+        </a>
+      ` : ''}
+      
+      ${student.file_loa ? `
+        <a href="${student.file_loa}" target="_blank" 
+           class="flex items-center gap-3 p-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition group">
+          <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-orange-900 truncate">LOA</p>
+            <p class="text-xs text-orange-600">Lihat File</p>
+          </div>
+        </a>
+      ` : ''}
+    </div>
   `;
 
   document.getElementById("viewStudentModal").classList.remove("hidden");
