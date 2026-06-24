@@ -39,38 +39,44 @@ async function loadMobilityFromAPI() {
       console.log("RAW DATA:", result.data[0]);
 
       mobilityPrograms = result.data.map((row) => {
-        const rawStart = row["Tahun Masuk Mahasiswa"] || row.tahun_masuk || "";
-        const rawEnd = row["Tahun Keluar Mahasiswa"] || row.tahun_keluar || "";
+  const rawStart = row["Tahun Masuk Mahasiswa"] || row.tahun_masuk || "";
+  const rawEnd = row["Tahun Keluar Mahasiswa"] || row.tahun_keluar || "";
 
-        return {
-          row: row.row,
-          no: row["No"] || "",
-          type: (row["Type Program"] || "").toString().trim().toLowerCase(),
-          jenis: (row["Jenis Program"] || "")
-            .toString()
-            .trim()
-            .toLowerCase()
-            .replace(/\s+/g, "_"),
-          kampus: row["Kampus Asal"] || "",
-          nama: row["Nama"] || "",
-          ttl: row["Tempat dan Tanggal Lahir"] || "",
-          negara: row["Negara"] || "",
-          fakultas: row["Fakultas / Prodi / Penyelenggara Program"] || "",
-          prodiPJ: row["Prodi/PJ"] || "",
+  return {
+    row: row.row,
+    no: row["No"] || "",
+    type: (row["Type Program"] || "").toString().trim().toLowerCase(),
+    jenis: (row["Jenis Program"] || "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "_"),
+    kampus: row["Kampus Asal"] || "",
+    nama: row["Nama"] || "",
+    ttl: row["Tempat dan Tanggal Lahir"] || "",
+    negara: row["Negara"] || "",
+    fakultas: row["Fakultas / Prodi / Penyelenggara Program"] || "",
+    prodiPJ: row["Prodi/PJ"] || "",
 
-          // 🔥 ISO untuk calendar
-          startISO: rawStart,
-          endISO: rawEnd,
+    // 🔥 ISO untuk calendar
+    startISO: rawStart,
+    endISO: rawEnd,
 
-          // 🔥 Indo untuk tabel
-          tahunMasuk: formatTanggalIndo(rawStart),
-          tahunKeluar: formatTanggalIndo(rawEnd),
+    // 🔥 Indo untuk tabel
+    tahunMasuk: formatTanggalIndo(rawStart),
+    tahunKeluar: formatTanggalIndo(rawEnd),
 
-          masaStudy: row["Masa Study"] || "",
-          passport: row["No. Passport"] || "",
-          gender: row["Jenis Kelamin"] || "",
-        };
-      });
+    masaStudy: row["Masa Study"] || "",
+    passport: row["No. Passport"] || "",
+    gender: row["Jenis Kelamin"] || "",
+    
+    // 🔥 PERBAIKAN: Sesuaikan dengan header sheet yang SEBENARNYA
+    foto: row["Foto"] || row["Link Foto"] || "",
+    file_loa: row["File Loa"] || row["File LOA"] || row["Link LOA"] || "",
+    scan_passport: row["Scan Passport"] || "",
+    regulerKmi: row["Reguler/Kmi"] || row["Reguler / KMI"] || row["Reguler_KMI"] || "",
+  };
+});
 
       // 🔥 TAMBAHKAN INI: Urutkan data terbaru (row terbesar) di paling atas
       mobilityPrograms.sort((a, b) => parseInt(b.row) - parseInt(a.row));
@@ -465,6 +471,311 @@ function showEventModal(prog) {
 
   document.body.insertAdjacentHTML("beforeend", html);
 }
+/* ===============================
+   VIEW MOBILITY DETAIL
+================================= */
+function viewMobilityDetail(row) {
+  const prog = mobilityPrograms.find((p) => p.row == row);
+  if (!prog) {
+    alert('Data tidak ditemukan');
+    return;
+  }
+
+  // Cek apakah modal sudah ada, jika belum buat secara dinamis
+  let modal = document.getElementById('mobilityDetailModal');
+  if (!modal) {
+    createMobilityDetailModal();
+    modal = document.getElementById('mobilityDetailModal');
+  }
+
+  // Warna badge untuk type
+  const typeColor = prog.type === 'outbound' 
+    ? 'bg-blue-100 text-blue-800 border-blue-200' 
+    : prog.type === 'inbound' 
+      ? 'bg-green-100 text-green-800 border-green-200'
+      : 'bg-purple-100 text-purple-800 border-purple-200';
+
+  // Warna untuk jenis
+  const jenisColor = prog.jenis === 'exchange' ? 'bg-indigo-100 text-indigo-800' :
+                     prog.jenis === 'internship' ? 'bg-pink-100 text-pink-800' :
+                     prog.jenis === 'research' ? 'bg-yellow-100 text-yellow-800' :
+                     prog.jenis === 'short_course' ? 'bg-orange-100 text-orange-800' :
+                     prog.jenis === 'double_degree' ? 'bg-red-100 text-red-800' :
+                     'bg-gray-100 text-gray-800';
+
+  // Format jenis untuk ditampilkan
+  const jenisLabel = {
+    'exchange': 'Student Exchange',
+    'short_course': 'Short Course',
+    'internship': 'Internship',
+    'research': 'Research',
+    'double_degree': 'Double Degree',
+    'other': 'Lainnya'
+  }[prog.jenis] || prog.jenis || '-';
+
+  // Isi konten modal
+  document.getElementById('mobilityDetailContent').innerHTML = `
+    <!-- Header dengan Foto & Info Utama -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-100">
+      <div class="flex flex-col md:flex-row items-center gap-6">
+        <!-- Foto -->
+        <div class="w-32 h-32 rounded-xl overflow-hidden border-4 border-white shadow-lg bg-gray-100 flex-shrink-0">
+          ${prog.foto ? `
+            <img src="${getGoogleDriveImageUrlMobility(prog.foto)}" 
+                 alt="${prog.nama}" 
+                 class="w-full h-full object-cover"
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22 viewBox=%220 0 24 24%22 fill=%22%23e5e7eb%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22/%3E%3Cpath fill=%22%239ca3af%22 d=%22M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z%22/%3E%3C/svg%3E'">
+          ` : `
+            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-400 to-indigo-500">
+              <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+          `}
+        </div>
+        
+        <!-- Info Utama -->
+        <div class="flex-1 text-center md:text-left">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">${prog.nama}</h2>
+          <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-3">
+            <span class="px-3 py-1 text-xs font-semibold rounded-full border ${typeColor}">
+              ${prog.type ? prog.type.toUpperCase() : '-'}
+            </span>
+            <span class="px-3 py-1 text-xs font-semibold rounded-full ${jenisColor}">
+              ${jenisLabel}
+            </span>
+            ${prog.gender ? `
+              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-700">
+                ${prog.gender === 'Male' ? '♂ Laki-laki' : '♀ Perempuan'}
+              </span>
+            ` : ''}
+          </div>
+          <p class="text-sm text-gray-600">
+            <span class="font-semibold">🌍 ${prog.negara || '-'}</span>
+            ${prog.ttl ? ` • <span class="text-gray-500">📍 ${prog.ttl}</span>` : ''}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Informasi -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Informasi Program -->
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">📋</span>
+          Informasi Program
+        </h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-start py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Kampus Asal</span>
+            <span class="text-sm font-semibold text-gray-800 text-right max-w-[60%]">${prog.kampus || '-'}</span>
+          </div>
+          <div class="flex justify-between items-start py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Fakultas/Prodi</span>
+            <span class="text-sm font-semibold text-gray-800 text-right max-w-[60%]">${prog.fakultas || '-'}</span>
+          </div>
+          <div class="flex justify-between items-start py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Prodi/PJ</span>
+            <span class="text-sm font-semibold text-gray-800 text-right max-w-[60%]">${prog.prodiPJ || '-'}</span>
+          </div>
+          <div class="flex justify-between items-start py-2">
+            <span class="text-sm text-gray-500">Reguler/KMI</span>
+            <span class="text-sm font-semibold text-gray-800">${prog.regulerKmi || '-'}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informasi Periode -->
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600">📅</span>
+          Periode & Durasi
+        </h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Tanggal Mulai</span>
+            <span class="text-sm font-semibold text-gray-800">${prog.tahunMasuk || '-'}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Tanggal Selesai</span>
+            <span class="text-sm font-semibold text-gray-800">${prog.tahunKeluar || '-'}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Masa Studi</span>
+            <span class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">${prog.masaStudy || '-'}</span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <span class="text-sm text-gray-500">Status</span>
+            <span class="px-3 py-1 text-xs font-semibold rounded-full ${typeColor}">
+              ${prog.type ? prog.type.toUpperCase() : '-'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informasi Dokumen -->
+      <div class="bg-white border border-gray-200 rounded-xl p-5 md:col-span-2">
+        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">📄</span>
+          Dokumen & Identitas
+        </h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <p class="text-xs text-gray-500 mb-1">No. Passport</p>
+            <p class="font-semibold text-gray-800">${prog.passport || '-'}</p>
+          </div>
+          ${prog.file_loa ? `
+            <a href="${prog.file_loa}" target="_blank" 
+               class="bg-blue-50 hover:bg-blue-100 p-3 rounded-lg transition flex items-center gap-3 group">
+              <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-blue-900 truncate">LOA</p>
+                <p class="text-xs text-blue-600">Lihat File</p>
+              </div>
+            </a>
+          ` : `
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <p class="text-xs text-gray-500 mb-1">File LOA</p>
+              <p class="font-semibold text-gray-400">-</p>
+            </div>
+          `}
+          ${prog.scan_passport ? `
+            <a href="${prog.scan_passport}" target="_blank" 
+               class="bg-green-50 hover:bg-green-100 p-3 rounded-lg transition flex items-center gap-3 group">
+              <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-9 0V5a2 2 0 012-2h2a2 2 0 012 2v1m-4 0h4"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-green-900 truncate">Scan Passport</p>
+                <p class="text-xs text-green-600">Lihat File</p>
+              </div>
+            </a>
+          ` : `
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <p class="text-xs text-gray-500 mb-1">Scan Passport</p>
+              <p class="font-semibold text-gray-400">-</p>
+            </div>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Tampilkan modal
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ===============================
+   CREATE MOBILITY DETAIL MODAL
+================================= */
+function createMobilityDetailModal() {
+  const modalHTML = `
+    <div id="mobilityDetailModal" 
+         class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[60] p-4"
+         onclick="closeMobilityDetailModal(event)">
+      <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl"
+           onclick="event.stopPropagation()">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-600 rounded-t-2xl sticky top-0 z-10">
+          <h3 class="font-semibold text-lg text-white flex items-center gap-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Detail Program Mobilitas
+          </h3>
+          <button onclick="closeMobilityDetailModal()" 
+                  class="text-white hover:text-gray-200 text-3xl transition">
+            &times;
+          </button>
+        </div>
+        
+        <!-- Content -->
+        <div id="mobilityDetailContent" class="p-6">
+          <!-- Dynamic content -->
+        </div>
+        
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t bg-gray-50 rounded-b-2xl flex justify-end gap-3">
+          <button onclick="closeMobilityDetailModal()" 
+                  class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+/* ===============================
+   CLOSE MOBILITY DETAIL MODAL
+================================= */
+function closeMobilityDetailModal(event) {
+  const modal = document.getElementById('mobilityDetailModal');
+  if (!modal) return;
+  
+  // Close jika klik backdrop atau tidak ada event
+  if (!event || event.target.id === 'mobilityDetailModal') {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close dengan ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('mobilityDetailModal');
+    if (modal && !modal.classList.contains('hidden')) {
+      closeMobilityDetailModal();
+    }
+  }
+});
+
+/* ===============================
+   HELPER: Google Drive Image URL (Mobility)
+================================= */
+function getGoogleDriveImageUrlMobility(driveUrl) {
+  if (!driveUrl || driveUrl.trim() === '') return null;
+  
+  driveUrl = driveUrl.trim();
+  let fileId = null;
+  
+  const match1 = driveUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match1) fileId = match1[1];
+  
+  if (!fileId) {
+    const match2 = driveUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (match2) fileId = match2[1];
+  }
+  
+  if (!fileId) {
+    const match3 = driveUrl.match(/thumbnail\?id=([a-zA-Z0-9_-]+)/);
+    if (match3) fileId = match3[1];
+  }
+  
+  if (fileId) {
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+  }
+  
+  if (driveUrl.match(/^https?:\/\//)) {
+    return driveUrl;
+  }
+  
+  return null;
+}
+// Render mobility table
 // Render mobility table
 function renderMobilityTable(page = 1, data = mobilityPrograms) {
   const tbody = document.getElementById("mobilityTableBody");
@@ -493,14 +804,43 @@ function renderMobilityTable(page = 1, data = mobilityPrograms) {
       (p) => `
     <tr class="hover:bg-blue-50/30 transition">
       <td class="px-4 py-3 font-medium">${p.nama}</td>
-      <td class="px-4 py-3 capitalize">${p.jenis}</td>
+      <td class="px-4 py-3 capitalize">${p.jenis || "-"}</td>
       <td class="px-4 py-3">${p.kampus}</td>
       <td class="px-4 py-3 text-xs">${p.tahunMasuk} - ${p.tahunKeluar}</td>
       <td class="px-4 py-3">${p.masaStudy || "-"}</td>
-      <td class="px-4 py-3">${p.type}</td>
-      <td class="px-4 py-3 flex gap-2">
-        <button onclick="editMobility(${p.row})" class="text-blue-600 hover:scale-110 transition">✏️</button>
-        <button onclick="deleteMobility(${p.row})" class="text-red-600 hover:scale-110 transition">🗑️</button>
+      <td class="px-4 py-3">
+        <span class="px-2 py-1 text-xs font-medium rounded-full ${
+          p.type === 'outbound' ? 'bg-blue-100 text-blue-800' :
+          p.type === 'inbound' ? 'bg-green-100 text-green-800' :
+          'bg-purple-100 text-purple-800'
+        }">
+          ${p.type || "-"}
+        </span>
+      </td>
+      <td class="px-4 py-3">
+        <div class="flex gap-1">
+          <button 
+            onclick="viewMobilityDetail(${p.row})"
+            class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            title="Lihat Detail"
+          >
+            👁
+          </button>
+          <button 
+            onclick="editMobility(${p.row})"
+            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 transition"
+            title="Edit"
+          >
+            ✏️
+          </button>
+          <button 
+            onclick="deleteMobility(${p.row})"
+            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+            title="Hapus"
+          >
+            🗑️
+          </button>
+        </div>
       </td>
     </tr>
   `,
@@ -693,56 +1033,73 @@ function updateMobilityStats() {
 // Modal functions
 function openMobilityModal(isEdit = false, program = null) {
   const modal = document.getElementById("mobilityFormSection");
-  if (!modal) return;
+  const title = document.getElementById("modalTitle");
+  
+  if (!modal) {
+    console.error("Modal tidak ditemukan!");
+    return;
+  }
 
-  // ganti judul tanpa merubah struktur HTML
-  const title = modal.querySelector("h3");
+  // ganti judul
   if (title) {
-    title.textContent = isEdit
-      ? "Edit Program Mobilitas"
-      : "Form Program Mobilitas";
+    title.textContent = isEdit ? "Edit Program Mobilitas" : "Form Program Mobilitas";
   }
 
   if (isEdit && program) {
-    document.getElementById("mobilityId").value = program.row;
+    // Set value dengan validasi
+    safeSetValue("mobilityId", program.row);
+    safeSetValue("type_program", program.type || "");
+    safeSetValue("jenis_program", program.jenis || "");
+    safeSetValue("kampus_asal", program.kampus || "");
+    safeSetValue("nama", program.nama || "");
 
-    document.getElementById("type_program").value = program.type || "";
-    document.getElementById("jenis_program").value = program.jenis || "";
-    document.getElementById("kampus_asal").value = program.kampus || "";
-    document.getElementById("nama").value = program.nama || "";
-
-    // ==============================
-    // PARSE TTL UNIVERSAL (BARU)
-    // ==============================
+    // Parse TTL
     const ttlValue = program.ttl || "";
     parseTTLToForm(ttlValue);
-    document.getElementById("ttl").value = ttlValue;
+    safeSetValue("ttl", ttlValue);
 
     setSelectValue("negara", program.negara);
     setSelectValue("fakultas_prodi_program", program.fakultas);
     setSelectValue("prodi_pj", program.prodiPJ);
 
-    document.getElementById("tahun_masuk").value = convertToInputDate(
-      program.startISO,
-    );
-
-    document.getElementById("tahun_keluar").value = convertToInputDate(
-      program.endISO,
-    );
-
-    document.getElementById("masa_study").value = program.masaStudy || "";
-
-    document.getElementById("no_passport").value = program.passport || "";
-
-    document.getElementById("jenis_kelamin").value = program.gender || "Male";
+    safeSetValue("tahun_masuk", convertToInputDate(program.startISO));
+    safeSetValue("tahun_keluar", convertToInputDate(program.endISO));
+    safeSetValue("masa_study", program.masaStudy || "");
+    safeSetValue("no_passport", program.passport || "");
+    safeSetValue("jenis_kelamin", program.gender || "Male");
+    
+    // Field tambahan untuk file
+    safeSetValue("file_loa", program.file_loa || "");
+    safeSetValue("scan_passport", program.scan_passport || "");
+    safeSetValue("foto", program.foto || "");
+    safeSetValue("reguler_kmi", program.regulerKmi || "");
   } else {
-    document.getElementById("mobilityForm").reset();
-    document.getElementById("mobilityId").value = "";
+    // Reset form
+    const form = document.getElementById("mobilityForm");
+    if (form) form.reset();
+    safeSetValue("mobilityId", "");
   }
 
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  
+  // Scroll ke atas modal
+  const modalContent = modal.querySelector('.overflow-y-auto');
+  if (modalContent) {
+    modalContent.scrollTop = 0;
+  }
+  
   document.body.classList.add("overflow-hidden");
+}
+
+// Helper function untuk set value dengan aman
+function safeSetValue(id, value) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.value = value || "";
+  } else {
+    console.warn(`Element dengan id "${id}" tidak ditemukan`);
+  }
 }
 /* ===============================
    PARSE TTL UNIVERSAL
@@ -903,6 +1260,7 @@ function showMobilityForm() {
   document.body.classList.add("overflow-hidden");
 }
 // Form handler
+// Form handler
 async function handleMobilitySubmit(e) {
   e.preventDefault();
 
@@ -910,7 +1268,6 @@ async function handleMobilitySubmit(e) {
   const submitBtn = form.querySelector("button[type='submit']");
   const rowId = document.getElementById("mobilityId").value;
 
-  // 🚫 cegah double click
   if (submitBtn.disabled) return;
 
   submitBtn.disabled = true;
@@ -918,84 +1275,117 @@ async function handleMobilitySubmit(e) {
   submitBtn.innerHTML = "⏳ Menyimpan...";
 
   try {
-    // ==============================
     // GABUNG TTL
-    // ==============================
     const tempat = document.getElementById("tempat_lahir").value;
     const tanggal = document.getElementById("tanggal_lahir").value;
-
-    const ttlGabung =
-      tempat && tanggal ? `${tempat}, ${tanggal}` : tempat || "";
-
+    const ttlGabung = tempat && tanggal ? `${tempat}, ${tanggal}` : tempat || "";
     document.getElementById("ttl").value = ttlGabung;
 
-    const payload = {
-      action: "create",
-      sheet: "DATA MAHASISWA NON DEGREE",
+    // Hitung Masuk Tahun & Keluar Tahun
+    let masukTahun = "";
+    let keluarTahun = "";
+    const tMasuk = document.getElementById("tahun_masuk").value;
+    const tKeluar = document.getElementById("tahun_keluar").value;
+    if (tMasuk) {
+      const d = new Date(tMasuk);
+      if (!isNaN(d)) masukTahun = d.getFullYear();
+    }
+    if (tKeluar) {
+      const d = new Date(tKeluar);
+      if (!isNaN(d)) keluarTahun = d.getFullYear();
+    }
 
+    // 🔥 AMBIL SEMUA NILAI FORM
+    const formData = {
       type_program: document.getElementById("type_program").value,
       jenis_program: document.getElementById("jenis_program").value,
       kampus_asal: document.getElementById("kampus_asal").value,
       nama: document.getElementById("nama").value,
       ttl: ttlGabung,
       negara: document.getElementById("negara").value,
-      fakultas_prodi_program: document.getElementById("fakultas_prodi_program")
-        .value,
+      fakultas_prodi_program: document.getElementById("fakultas_prodi_program").value,
       prodi_pj: document.getElementById("prodi_pj").value,
-      tahun_masuk: document.getElementById("tahun_masuk").value,
-      tahun_keluar: document.getElementById("tahun_keluar").value,
+      tahun_masuk: tMasuk,
+      tahun_keluar: tKeluar,
       masa_study: document.getElementById("masa_study").value,
       no_passport: document.getElementById("no_passport").value,
       jenis_kelamin: document.getElementById("jenis_kelamin").value,
+      reguler_kmi: document.getElementById("reguler_kmi").value || "",
+      file_loa: document.getElementById("file_loa").value || "",
+      scan_passport: document.getElementById("scan_passport").value || "",
+      foto: document.getElementById("foto").value || "",
     };
 
-    // 🔥 kalau edit → hapus dulu
-    if (rowId) {
-      await fetch(MOBILITY_API, {
-        method: "POST",
-        body: JSON.stringify({
-          action: "delete",
-          sheet: "DATA MAHASISWA NON DEGREE",
-          row: rowId,
-        }),
-      });
-    }
+    // 🔥 PAYLOAD: Key lowercase (untuk create) + Key PERSIS header sheet (untuk update)
+    const payload = {
+      action: rowId ? "update" : "create",
+      sheet: "DATA MAHASISWA NON DEGREE",
+      row: rowId || "",
 
-    // 🔥 create baru
+      // ✅ Key lowercase (untuk backend createStudent)
+      ...formData,
+      masuk_tahun: masukTahun,
+      keluar_tahun: keluarTahun,
+      report_izin: "",
+
+      // ✅ Key PERSIS sama dengan header sheet (untuk backend updateStudent)
+      // Perhatikan case dan spasi HARUS PERSIS!
+      "No": "",
+      "Type Program": formData.type_program,
+      "Jenis Program": formData.jenis_program,
+      "Kampus Asal": formData.kampus_asal,
+      "Nama": formData.nama,
+      "Tempat dan Tanggal Lahir": formData.ttl,
+      "Negara": formData.negara,
+      "Fakultas / Prodi / Penyelenggara Program": formData.fakultas_prodi_program,
+      "Prodi/PJ": formData.prodi_pj,
+      "Tahun Masuk Mahasiswa": formData.tahun_masuk,
+      "Tahun Keluar Mahasiswa": formData.tahun_keluar,
+      "Masa Study": formData.masa_study,
+      "No. Passport": formData.no_passport,
+      "Masuk Tahun": masukTahun,
+      "Keluar Tahun": keluarTahun,
+      "Report / Izin Belajar": "",
+      "Scan Passport": formData.scan_passport,
+      "Foto": formData.foto,
+      "File Loa": formData.file_loa,         // ✅ "File Loa" (bukan "File LOA")
+      "Reguler/Kmi": formData.reguler_kmi,   // ✅ "Reguler/Kmi" (tanpa spasi)
+      "Jenis Kelamin": formData.jenis_kelamin,
+    };
+
+    console.log("📦 PAYLOAD LENGKAP:", payload);
+    console.log("🎯 Action:", payload.action);
+    console.log("🔑 File Loa:", payload["File Loa"]);
+    console.log("🔑 Reguler/Kmi:", payload["Reguler/Kmi"]);
+
     const res = await fetch(MOBILITY_API, {
       method: "POST",
       body: JSON.stringify(payload),
     });
 
     const result = await res.json();
+    console.log("📥 HASIL DARI SERVER:", result);
 
     if (!result.success) {
       throw new Error(result.error || "Gagal menyimpan");
     }
 
     await loadMobilityFromAPI();
-
     document.getElementById("mobilityCalendar").innerHTML = "";
     initMobilityCalendar();
-
     renderMobilityTable(1);
     updateMobilityStats();
-
     closeMobilityModal();
 
-    alert(
-      rowId ? "✅ Data berhasil diupdate!" : "✅ Data berhasil ditambahkan!",
-    );
+    alert(rowId ? "✅ Data berhasil diupdate!" : "✅ Data berhasil ditambahkan!");
   } catch (err) {
-    console.error("Submit error:", err);
-    alert("❌ Terjadi kesalahan saat menyimpan data");
+    console.error("❌ Error:", err);
+    alert("❌ Terjadi kesalahan: " + err.message);
   } finally {
-    // 🔥 aktifkan kembali tombol
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalText;
   }
 }
-
 function formatMobilityStatus(code) {
   const map = {
     aktif: "Aktif",
