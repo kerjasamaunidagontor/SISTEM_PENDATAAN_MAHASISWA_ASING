@@ -1,63 +1,55 @@
-<!-- Mobilitas Internasional Content -->
+<!-- ✅ Mobilitas Internasional Content - VERSI BERSIH -->
 <div class="space-y-6">
   <!-- Summary Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-  
-  <!-- Program Keluar -->
-  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
-    <div class="absolute top-4 right-4">
-      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
-        Outbound
-      </span>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Program Keluar -->
+    <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+      <div class="absolute top-4 right-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">Outbound</span>
+      </div>
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </div>
+      <div>
+        <p class="text-4xl font-bold text-white mb-1" id="outboundCount">0</p>
+        <p class="text-blue-50 font-medium text-sm">Program Keluar</p>
+      </div>
     </div>
-    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
-      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-      </svg>
+
+    <!-- Program Masuk -->
+    <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+      <div class="absolute top-4 right-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">Inbound</span>
+      </div>
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+        </svg>
+      </div>
+      <div>
+        <p class="text-4xl font-bold text-white mb-1" id="inboundCount">0</p>
+        <p class="text-emerald-50 font-medium text-sm">Program Masuk</p>
+      </div>
     </div>
-    <div>
-      <p class="text-4xl font-bold text-white mb-1" id="outboundCount">0</p>
-      <p class="text-blue-50 font-medium text-sm">Program Keluar</p>
+
+    <!-- Total Mitra -->
+    <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-400 to-purple-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
+      <div class="absolute top-4 right-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">Partners</span>
+      </div>
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+      </div>
+      <div>
+        <p class="text-4xl font-bold text-white mb-1" id="partnerCount">0</p>
+        <p class="text-purple-50 font-medium text-sm">Total Mitra</p>
+      </div>
     </div>
   </div>
-
-  <!-- Program Masuk -->
-  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
-    <div class="absolute top-4 right-4">
-      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
-        Inbound
-      </span>
-    </div>
-    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
-      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
-      </svg>
-    </div>
-    <div>
-      <p class="text-4xl font-bold text-white mb-1" id="inboundCount">0</p>
-      <p class="text-emerald-50 font-medium text-sm">Program Masuk</p>
-    </div>
-  </div>
-
-  <!-- Total Mitra -->
-  <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-400 to-purple-600 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[160px]">
-    <div class="absolute top-4 right-4">
-      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
-        Partners
-      </span>
-    </div>
-    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
-      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-      </svg>
-    </div>
-    <div>
-      <p class="text-4xl font-bold text-white mb-1" id="partnerCount">0</p>
-      <p class="text-purple-50 font-medium text-sm">Total Mitra</p>
-    </div>
-  </div>
-
-</div>
 
   <!-- Calendar & List -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -69,317 +61,227 @@
 
     <!-- Upcoming Events -->
     <div class="bg-white rounded-xl shadow p-5 flex flex-col">
-    <h3 class="font-semibold text-gray-700 mb-4">🔜 Akan Datang</h3>
-    
-    <!-- ✅ UBAH: max-h jadi lebih besar atau h-full dengan flex-1 -->
-    <div id="upcomingEvents" class="space-y-3 flex-1 overflow-y-auto pr-2 max-h-[600px]">
-        <!-- Dynamic events from JS -->
-      </div>
+      <h3 class="font-semibold text-gray-700 mb-4">🔜 Akan Datang</h3>
+      <div id="upcomingEvents" class="space-y-3 flex-1 overflow-y-auto pr-2 max-h-[600px]"></div>
     </div>
   </div>
 
-  <!-- Mobility Table -->
-  <!-- Mobility Table -->
-  <div class="bg-white rounded-xl shadow overflow-hidden">
+  <!-- ✅ Mobility Table Container -->
+  <div class="bg-white rounded-xl shadow">
     <!-- Header -->
     <div class="p-4 border-b flex flex-col gap-4">
-      <!-- Row 1 : Title + Buttons -->
-      <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-3"
-      >
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <h3 class="font-semibold text-gray-700">📋 Daftar Program Mobilitas</h3>
-
         <div class="flex flex-wrap gap-2">
-          <button onclick="downloadMobilityCSV()" class="btn-export btn-green">
-            📄 CSV
-          </button>
-
-          <button onclick="downloadMobilityExcel()" class="btn-export btn-blue">
-            📊 Excel
-          </button>
-
-          <button onclick="downloadMobilityPDF()" class="btn-export btn-red">
-            📑 PDF
-          </button>
-
-          <button
-            onclick="showMobilityForm()"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm"
-          >
-            ➕ Tambah Program
-          </button>
+          <button onclick="downloadMobilityCSV()" class="btn-export btn-green">📄 CSV</button>
+          <button onclick="downloadMobilityExcel()" class="btn-export btn-blue">📊 Excel</button>
+          <button onclick="downloadMobilityPDF()" class="btn-export btn-red">📑 PDF</button>
+          <button onclick="showMobilityForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">➕ Tambah Program</button>
         </div>
       </div>
 
-      <!-- Row 2 : Search -->
+      <!-- Search -->
       <div class="flex justify-start">
         <div class="relative w-full md:w-96">
-          <!-- Icon -->
-          <span
-            class="absolute inset-y-0 left-3 flex items-center text-gray-400"
-          >
-            🔎
-          </span>
-
-          <!-- Input -->
-          <input
-            type="text"
-            id="mobilitySearch"
-            placeholder="Cari nama, jenis, kampus, atau negara..."
-            onkeyup="filterMobilityTable()"
-            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-          />
+          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">🔎</span>
+          <input type="text" id="mobilitySearch" placeholder="Cari nama, jenis, kampus, atau negara..." onkeyup="filterMobilityTable()" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"/>
         </div>
-      </div>
-      <!-- Table -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead
-            class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wide"
-          >
-            <tr>
-              <th class="px-4 py-3 text-left">Nama Peserta</th>
-              <th class="px-4 py-3 text-left">Jenis</th>
-              <th class="px-4 py-3 text-left">Mitra</th>
-              <th class="px-4 py-3 text-left">Periode</th>
-              <th class="px-4 py-3 text-left">Masa Studi</th>
-              <th class="px-4 py-3 text-left">Status</th>
-              <th class="px-4 py-3 text-left">Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody
-            id="mobilityTableBody"
-            class="divide-y divide-gray-100"
-          ></tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div class="p-4 border-t flex justify-center bg-gray-50">
-        <div id="mobilityPagination" class="flex gap-2 flex-wrap"></div>
       </div>
     </div>
 
-    <!-- MOBILITY MODAL -->
-    <div
-      id="mobilityFormSection"
-      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50"
-    >
-      <div
-        class="bg-white rounded-xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto p-6"
-      >
-        <h3 class="text-lg font-semibold mb-4">Form Program Mobilitas</h3>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wide">
+          <tr>
+            <th class="px-4 py-3 text-left">Nama Peserta</th>
+            <th class="px-4 py-3 text-left">Jenis</th>
+            <th class="px-4 py-3 text-left">Mitra</th>
+            <th class="px-4 py-3 text-left">Periode</th>
+            <th class="px-4 py-3 text-left">Masa Studi</th>
+            <th class="px-4 py-3 text-left">Status</th>
+            <th class="px-4 py-3 text-left">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="mobilityTableBody" class="divide-y divide-gray-100"></tbody>
+      </table>
+    </div>
 
-        <form id="mobilityForm" class="space-y-4">
-          <input type="hidden" id="mobilityId" />
+    <!-- Pagination -->
+    <div class="p-4 border-t flex justify-center bg-gray-50">
+      <div id="mobilityPagination" class="flex gap-2 flex-wrap"></div>
+    </div>
+  </div>
+</div>
+<!-- ✅ END Mobilitas Internasional Content -->
 
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="text-sm font-medium">Type Program</label>
-              <select id="type_program" required class="w-full input">
-                <option value="outbound">Outbound</option>
-                <option value="inbound">Inbound</option>
-                <option value="virtual">Virtual</option>
-              </select>
-            </div>
+<!-- ✅ MOBILITY FORM MODAL - DIPERBAIKI -->
+<div id="mobilityFormSection" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[9999] overflow-y-auto p-4">
+  <div class="bg-white rounded-2xl w-full max-w-4xl my-8 shadow-2xl overflow-hidden">
+    <!-- Header Modal - Fixed Position -->
+    <div class="px-6 py-4 border-b flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-600 sticky top-0 z-10">
+      <h3 id="modalTitle" class="text-lg font-semibold text-white">Form Program Mobilitas</h3>
+      <button onclick="closeMobilityModal()" class="text-white hover:text-gray-200 text-3xl transition leading-none">&times;</button>
+    </div>
 
-            <div>
-              <label class="text-sm font-medium">Jenis Program</label>
-              <select id="jenis_program" required class="w-full input">
-                <option value="">-- Pilih Jenis Program --</option>
-                <option value="exchange">Student Exchange</option>
-                <option value="short_course">Short Course</option>
-                <option value="internship">Internship</option>
-                <option value="research">Research</option>
-                <option value="double_degree">Double Degree</option>
-                <option value="other">Lainnya</option>
-              </select>
-            </div>
+    <!-- Form Content - Scrollable -->
+    <div class="overflow-y-auto max-h-[calc(90vh-140px)] p-6">
+      <form id="mobilityForm" class="space-y-4">
+        <input type="hidden" id="mobilityId" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium block mb-1">Type Program</label>
+            <select id="type_program" required class="w-full input">
+              <option value="outbound">Outbound</option>
+              <option value="inbound">Inbound</option>
+              <option value="virtual">Virtual</option>
+            </select>
           </div>
 
           <div>
-            <label class="text-sm font-medium">
-              Kampus Asal
-              <span class="text-xs text-gray-500">
-                (Tulis lengkap, tidak boleh disingkat)
-              </span>
-            </label>
-            <input
-              type="text"
-              id="kampus_asal"
-              class="w-full input"
-              placeholder="Contoh: Universitas Darussalam Gontor"
-              required
-            />
-            <p id="kampusWarning" class="text-red-500 text-xs mt-1 hidden">
-              Nama kampus harus ditulis lengkap dan tidak boleh disingkat.
-            </p>
+            <label class="text-sm font-medium block mb-1">Jenis Program</label>
+            <select id="jenis_program" required class="w-full input">
+              <option value="">-- Pilih Jenis Program --</option>
+              <option value="exchange">Student Exchange</option>
+              <option value="short_course">Short Course</option>
+              <option value="internship">Internship</option>
+              <option value="research">Research</option>
+              <option value="double_degree">Double Degree</option>
+              <option value="other">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium block mb-1">
+            Kampus Asal
+            <span class="text-xs text-gray-500">(Tulis lengkap, tidak boleh disingkat)</span>
+          </label>
+          <input type="text" id="kampus_asal" class="w-full input" placeholder="Contoh: Universitas Darussalam Gontor" required/>
+          <p id="kampusWarning" class="text-red-500 text-xs mt-1 hidden">Nama kampus harus ditulis lengkap dan tidak boleh disingkat.</p>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium block mb-1">Nama Peserta</label>
+          <input type="text" id="nama" required class="w-full input"/>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium block mb-1">Tempat Lahir</label>
+            <input type="text" id="tempat_lahir" class="w-full input" placeholder="Contoh: Ponorogo"/>
           </div>
 
           <div>
-            <label class="text-sm font-medium">Nama Peserta</label>
-            <input type="text" id="nama" required class="w-full input" />
+            <label class="text-sm font-medium block mb-1">Tanggal Lahir</label>
+            <input type="date" id="tanggal_lahir" class="w-full input"/>
           </div>
+        </div>
 
+        <input type="hidden" id="ttl" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="text-sm font-medium">Tempat Lahir</label>
-            <input
-              type="text"
-              id="tempat_lahir"
-              class="w-full input"
-              placeholder="Contoh: Ponorogo"
-            />
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Tanggal Lahir</label>
-            <input type="date" id="tanggal_lahir" class="w-full input" />
-          </div>
-
-          <!-- Hidden field untuk dikirim ke API -->
-          <input type="hidden" id="ttl" />
-
-          <div>
-            <label class="text-sm font-medium">Negara</label>
+            <label class="text-sm font-medium block mb-1">Negara</label>
             <select id="negara" class="w-full input" required>
               <option value="">-- Pilih Negara --</option>
             </select>
           </div>
 
           <div>
-            <label class="text-sm font-medium"
-              >Fakultas / Prodi / Program</label
-            >
-            <select id="fakultas_prodi_program" class="w-full input" required>
-              <option value="">Pilih Fakultas</option>
-
-              <option value="Fakultas Humaniora">Fakultas Humaniora</option>
-              <option value="Fakultas Ekonomi Manajemen">
-                Fakultas Ekonomi Manajemen
-              </option>
-              <option value="Fakultas Tarbiyah">Fakultas Tarbiyah</option>
-              <option value="Fakultas Ushuluddin">Fakultas Ushuluddin</option>
-              <option value="Fakultas Syariah">Fakultas Syariah</option>
-              <option value="Fakultas Sains dan Teknologi">
-                Fakultas Sains dan Teknologi
-              </option>
-              <option value="Fakultas Kedokteran">Fakultas Kedokteran</option>
-              <option value="Fakultas Ilmu Kesehatan">
-                Fakultas Ilmu Kesehatan
-              </option>
-
-              <option value="Program Pascasarjana">Program Pascasarjana</option>
-              <option value="Universitas">Universitas</option>
-              <option
-                value="Pusat Pendidikan Dan Pelatihan (PUSDIKLAT) UNIDA Gontor"
-              >
-                Pusat Pendidikan Dan Pelatihan (PUSDIKLAT) UNIDA Gontor
-              </option>
-              <option value="Direktorat Islamisasi">
-                Direktorat Islamisasi
-              </option>
-              <option
-                value="Centre For Islamic And Occidental Studies (CIOS) UNIDA Gontor"
-              >
-                Centre For Islamic And Occidental Studies (CIOS) UNIDA Gontor
-              </option>
-              <option value="Direktorat Pengembangan Bahasa (DPB)">
-                Direktorat Pengembangan Bahasa (DPB)
-              </option>
-              <option value="Satuan Kerja">Satuan Kerja</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Prodi / PJ</label>
-            <select id="prodi_pj" class="w-full input" required>
-              <option value="">Pilih Program Studi</option>
-            </select>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="text-sm font-medium">Tanggal Mulai</label>
-              <input
-                type="date"
-                id="tahun_masuk"
-                required
-                class="w-full input"
-              />
-            </div>
-            <div>
-              <label class="text-sm font-medium">Tanggal Selesai</label>
-              <input
-                type="date"
-                id="tahun_keluar"
-                required
-                class="w-full input"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Masa Study</label>
-            <input
-              type="text"
-              id="masa_study"
-              class="w-full input bg-gray-100 cursor-not-allowed"
-              readonly
-            />
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">No Passport</label>
-            <input type="text" id="no_passport" class="w-full input" />
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Reguler / KMI</label>
-            <input type="text" id="reguler_kmi" class="w-full input" />
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Jenis Kelamin</label>
+            <label class="text-sm font-medium block mb-1">Jenis Kelamin</label>
             <select id="jenis_kelamin" class="w-full input">
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
           </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium block mb-1">Fakultas / Prodi / Program</label>
+          <select id="fakultas_prodi_program" class="w-full input" required>
+            <option value="">Pilih Fakultas</option>
+            <option value="Fakultas Humaniora">Fakultas Humaniora</option>
+            <option value="Fakultas Ekonomi Manajemen">Fakultas Ekonomi Manajemen</option>
+            <option value="Fakultas Tarbiyah">Fakultas Tarbiyah</option>
+            <option value="Fakultas Ushuluddin">Fakultas Ushuluddin</option>
+            <option value="Fakultas Syariah">Fakultas Syariah</option>
+            <option value="Fakultas Sains dan Teknologi">Fakultas Sains dan Teknologi</option>
+            <option value="Fakultas Kedokteran">Fakultas Kedokteran</option>
+            <option value="Fakultas Ilmu Kesehatan">Fakultas Ilmu Kesehatan</option>
+            <option value="Program Pascasarjana">Program Pascasarjana</option>
+            <option value="Universitas">Universitas</option>
+            <option value="Pusat Pendidikan Dan Pelatihan (PUSDIKLAT) UNIDA Gontor">Pusat Pendidikan Dan Pelatihan (PUSDIKLAT) UNIDA Gontor</option>
+            <option value="Direktorat Islamisasi">Direktorat Islamisasi</option>
+            <option value="Centre For Islamic And Occidental Studies (CIOS) UNIDA Gontor">Centre For Islamic And Occidental Studies (CIOS) UNIDA Gontor</option>
+            <option value="Direktorat Pengembangan Bahasa (DPB)">Direktorat Pengembangan Bahasa (DPB)</option>
+            <option value="Satuan Kerja">Satuan Kerja</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium block mb-1">Prodi / PJ</label>
+          <select id="prodi_pj" class="w-full input" required>
+            <option value="">Pilih Program Studi</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium block mb-1">Tanggal Mulai</label>
+            <input type="date" id="tahun_masuk" required class="w-full input"/>
+          </div>
+          <div>
+            <label class="text-sm font-medium block mb-1">Tanggal Selesai</label>
+            <input type="date" id="tahun_keluar" required class="w-full input"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium block mb-1">Masa Study</label>
+            <input type="text" id="masa_study" class="w-full input bg-gray-100 cursor-not-allowed" readonly/>
+          </div>
+
+          <div>
+            <label class="text-sm font-medium block mb-1">No Passport</label>
+            <input type="text" id="no_passport" class="w-full input"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium block mb-1">Reguler / KMI</label>
+          <input type="text" id="reguler_kmi" class="w-full input"/>
+        </div>
+
+        <!-- File Google Drive -->
+        <div class="border-t pt-4 mt-4">
+          <h4 class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide">File Google Drive</h4>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label class="text-sm font-medium">Link LOA</label>
-              <input
-                type="text"
-                id="file_loa"
-                class="w-full input"
-                placeholder="https://drive.google.com/..."
-              />
+              <label class="text-sm font-medium block mb-1">Link LOA</label>
+              <input type="url" id="file_loa" class="w-full input" placeholder="https://drive.google.com/..."/>
             </div>
 
             <div>
-              <label class="text-sm font-medium">Link Scan Passport</label>
-              <input type="text" id="scan_passport" class="w-full input" />
+              <label class="text-sm font-medium block mb-1">Link Scan Passport</label>
+              <input type="url" id="scan_passport" class="w-full input" placeholder="https://drive.google.com/..."/>
             </div>
 
             <div>
-              <label class="text-sm font-medium">Link Foto</label>
-              <input type="text" id="foto" class="w-full input" />
+              <label class="text-sm font-medium block mb-1">Link Foto</label>
+              <input type="url" id="foto" class="w-full input" placeholder="https://drive.google.com/..."/>
             </div>
           </div>
+        </div>
 
-          <div class="flex justify-end gap-3 pt-4">
-            <button
-              type="button"
-              onclick="closeMobilityModal()"
-              class="btn-secondary"
-            >
-              Batal
-            </button>
-            <button type="submit" class="btn-primary">Simpan</button>
-          </div>
-        </form>
-      </div>
+        <!-- Buttons - Sticky Bottom -->
+        <div class="flex justify-end gap-3 pt-4 border-t mt-4 sticky bottom-0 bg-white pb-2">
+          <button type="button" onclick="closeMobilityModal()" class="px-5 py-2 rounded-lg border hover:bg-gray-50 transition">Batal</button>
+          <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md">Simpan</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
