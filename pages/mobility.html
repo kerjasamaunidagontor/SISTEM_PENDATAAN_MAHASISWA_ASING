@@ -133,6 +133,7 @@
           <div>
             <label class="text-sm font-medium block mb-1">Type Program</label>
             <select id="type_program" required class="w-full input">
+              <option value="">-- Pilih Type Program --</option>
               <option value="outbound">Outbound</option>
               <option value="inbound">Inbound</option>
               <option value="virtual">Virtual</option>
@@ -153,13 +154,26 @@
           </div>
         </div>
 
-        <div>
-          <label class="text-sm font-medium block mb-1">
-            Kampus Asal
-            <span class="text-xs text-gray-500">(Tulis lengkap, tidak boleh disingkat)</span>
-          </label>
-          <input type="text" id="kampus_asal" class="w-full input" placeholder="Contoh: Universitas Darussalam Gontor" required/>
-          <p id="kampusWarning" class="text-red-500 text-xs mt-1 hidden">Nama kampus harus ditulis lengkap dan tidak boleh disingkat.</p>
+        <!-- 🔥 KAMPUS ASAL & KAMPUS TUJUAN (GRID 2 KOLOM) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium block mb-1">
+              Kampus Asal
+              <span class="text-xs text-gray-500">(Tulis lengkap, tidak boleh disingkat)</span>
+            </label>
+            <input type="text" id="kampus_asal" class="w-full input" placeholder="Contoh: Universitas Darussalam Gontor" required/>
+            <p id="kampusWarning" class="text-red-500 text-xs mt-1 hidden">Nama kampus harus ditulis lengkap dan tidak boleh disingkat.</p>
+          </div>
+
+          <div>
+            <label class="text-sm font-medium block mb-1">Kampus Tujuan</label>
+            <input 
+              type="text" 
+              id="kampus_tujuan" 
+              class="w-full input" 
+              placeholder="Contoh: Harvard University, USA"
+            />
+          </div>
         </div>
 
         <div>
@@ -253,6 +267,20 @@
         <div>
           <label class="text-sm font-medium block mb-1">Reguler / KMI</label>
           <input type="text" id="reguler_kmi" class="w-full input"/>
+        </div>
+
+        <!-- 🔥 FIELD BARU: Laporan Kegiatan -->
+        <div class="border-t pt-4 mt-4">
+          <h4 class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide">Laporan Kegiatan</h4>
+          <div>
+            <label class="text-sm font-medium block mb-1">Link Laporan Kegiatan</label>
+            <input 
+              type="url" 
+              id="laporan_kegiatan" 
+              class="w-full input" 
+              placeholder="https://drive.google.com/..."
+            />
+          </div>
         </div>
 
         <!-- File Google Drive -->
