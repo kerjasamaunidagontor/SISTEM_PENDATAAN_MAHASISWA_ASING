@@ -20,6 +20,11 @@ async function initMobility() {
     .getElementById("mobilityForm")
     ?.addEventListener("submit", handleMobilitySubmit);
 
+  // 🆕 Auto-fill kampus saat type program berubah
+  document
+    .getElementById("type_program")
+    ?.addEventListener("change", updateKampusByType);
+    
   initMobilityCalendar();
   renderMobilityTable(1);
   updateMobilityStats();
@@ -58,11 +63,9 @@ async function loadMobilityFromAPI() {
     fakultas: row["Fakultas / Prodi / Penyelenggara Program"] || "",
     prodiPJ: row["Prodi/PJ"] || "",
 
-    // 🔥 ISO untuk calendar
     startISO: rawStart,
     endISO: rawEnd,
 
-    // 🔥 Indo untuk tabel
     tahunMasuk: formatTanggalIndo(rawStart),
     tahunKeluar: formatTanggalIndo(rawEnd),
 
@@ -70,11 +73,14 @@ async function loadMobilityFromAPI() {
     passport: row["No. Passport"] || "",
     gender: row["Jenis Kelamin"] || "",
     
-    // 🔥 PERBAIKAN: Sesuaikan dengan header sheet yang SEBENARNYA
     foto: row["Foto"] || row["Link Foto"] || "",
     file_loa: row["File Loa"] || row["File LOA"] || row["Link LOA"] || "",
     scan_passport: row["Scan Passport"] || "",
     regulerKmi: row["Reguler/Kmi"] || row["Reguler / KMI"] || row["Reguler_KMI"] || "",
+    
+    // 🆕 Field baru
+    kampusTujuan: row["Kampus Tujuan"] || "",
+    laporanKegiatan: row["Laporan Kegiatan"] || "",
   };
 });
 
@@ -571,6 +577,11 @@ function viewMobilityDetail(row) {
             <span class="text-sm text-gray-500">Kampus Asal</span>
             <span class="text-sm font-semibold text-gray-800 text-right max-w-[60%]">${prog.kampus || '-'}</span>
           </div>
+          <!-- 🆕 Kampus Tujuan -->
+          <div class="flex justify-between items-start py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-500">Kampus Tujuan</span>
+            <span class="text-sm font-semibold text-gray-800 text-right max-w-[60%]">${prog.kampusTujuan || '-'}</span>
+          </div>
           <div class="flex justify-between items-start py-2 border-b border-gray-100">
             <span class="text-sm text-gray-500">Fakultas/Prodi</span>
             <span class="text-sm font-semibold text-gray-800 text-right max-w-[60%]">${prog.fakultas || '-'}</span>
@@ -660,6 +671,26 @@ function viewMobilityDetail(row) {
           ` : `
             <div class="bg-gray-50 p-3 rounded-lg">
               <p class="text-xs text-gray-500 mb-1">Scan Passport</p>
+              <p class="font-semibold text-gray-400">-</p>
+            </div>
+          `}
+          <!-- 🆕 Laporan Kegiatan -->
+          ${prog.laporanKegiatan ? `
+            <a href="${prog.laporanKegiatan}" target="_blank" 
+               class="bg-amber-50 hover:bg-amber-100 p-3 rounded-lg transition flex items-center gap-3 group">
+              <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-amber-900 truncate">Laporan Kegiatan</p>
+                <p class="text-xs text-amber-600">Lihat File</p>
+              </div>
+            </a>
+          ` : `
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <p class="text-xs text-gray-500 mb-1">Laporan Kegiatan</p>
               <p class="font-semibold text-gray-400">-</p>
             </div>
           `}
@@ -1045,12 +1076,26 @@ function openMobilityModal(isEdit = false, program = null) {
     title.textContent = isEdit ? "Edit Program Mobilitas" : "Form Program Mobilitas";
   }
 
+  // 🆕 Reset visual indicator
+  const kampusAsal = document.getElementById("kampus_asal");
+  const kampusTujuan = document.getElementById("kampus_tujuan");
+  if (kampusAsal) kampusAsal.classList.remove("bg-blue-50", "border-blue-300");
+  if (kampusTujuan) kampusTujuan.classList.remove("bg-blue-50", "border-blue-300");
+
   if (isEdit && program) {
     // Set value dengan validasi
     safeSetValue("mobilityId", program.row);
-    safeSetValue("type_program", program.type || "");
+    
+    // 🆕 Set type_program - pastikan value valid
+    const typeValue = program.type || "";
+    safeSetValue("type_program", typeValue);
+    
     safeSetValue("jenis_program", program.jenis || "");
+    
+    // 🆕 Set kampus - gunakan data asli, JANGAN auto-fill
     safeSetValue("kampus_asal", program.kampus || "");
+    safeSetValue("kampus_tujuan", program.kampusTujuan || "");
+    
     safeSetValue("nama", program.nama || "");
 
     // Parse TTL
@@ -1073,11 +1118,16 @@ function openMobilityModal(isEdit = false, program = null) {
     safeSetValue("scan_passport", program.scan_passport || "");
     safeSetValue("foto", program.foto || "");
     safeSetValue("reguler_kmi", program.regulerKmi || "");
+    safeSetValue("laporan_kegiatan", program.laporanKegiatan || "");
+    
   } else {
-    // Reset form
+    // Reset form untuk tambah baru
     const form = document.getElementById("mobilityForm");
     if (form) form.reset();
     safeSetValue("mobilityId", "");
+    
+    // 🆕 Trigger auto-fill untuk form baru (akan cek type_program)
+    setTimeout(() => updateKampusByType(), 50);
   }
 
   modal.classList.remove("hidden");
@@ -1256,6 +1306,9 @@ function showMobilityForm() {
   const idField = document.getElementById("mobilityId");
   if (idField) idField.value = "";
 
+  // 🆕 Trigger auto-fill setelah form di-reset
+  setTimeout(() => updateKampusByType(), 50);
+
   // optional: disable scroll body
   document.body.classList.add("overflow-hidden");
 }
@@ -1314,6 +1367,9 @@ async function handleMobilitySubmit(e) {
       file_loa: document.getElementById("file_loa").value || "",
       scan_passport: document.getElementById("scan_passport").value || "",
       foto: document.getElementById("foto").value || "",
+      // 🆕 Field baru
+      kampus_tujuan: document.getElementById("kampus_tujuan").value || "",
+      laporan_kegiatan: document.getElementById("laporan_kegiatan").value || "",
     };
 
     // 🔥 PAYLOAD: Key lowercase (untuk create) + Key PERSIS header sheet (untuk update)
@@ -1351,6 +1407,9 @@ async function handleMobilitySubmit(e) {
       "File Loa": formData.file_loa,         // ✅ "File Loa" (bukan "File LOA")
       "Reguler/Kmi": formData.reguler_kmi,   // ✅ "Reguler/Kmi" (tanpa spasi)
       "Jenis Kelamin": formData.jenis_kelamin,
+       // 🆕 Field baru
+      "Kampus Tujuan": formData.kampus_tujuan,
+      "Laporan Kegiatan": formData.laporan_kegiatan,
     };
 
     console.log("📦 PAYLOAD LENGKAP:", payload);
@@ -1487,6 +1546,46 @@ function getTotalActiveMobility() {
 
   return outbound + inbound;
 }
+/* ===============================
+   AUTO-FILL KAMPUS BERDASARKAN TYPE PROGRAM
+================================= */
+function updateKampusByType() {
+  const typeProgram = document.getElementById("type_program").value;
+  const kampusAsal = document.getElementById("kampus_asal");
+  const kampusTujuan = document.getElementById("kampus_tujuan");
+  
+  if (!kampusAsal || !kampusTujuan) return;
+  
+  const UNIDA = "Universitas Darussalam Gontor";
+  
+  // Reset visual indicator
+  kampusAsal.classList.remove("bg-blue-50", "border-blue-300");
+  kampusTujuan.classList.remove("bg-blue-50", "border-blue-300");
+  
+  // 🆕 Jika belum pilih type, kosongkan kedua field
+  if (!typeProgram) {
+    kampusAsal.value = "";
+    kampusTujuan.value = "";
+    return;
+  }
+  
+  if (typeProgram === "outbound") {
+    // Outbound: Dari UNIDA → Luar
+    kampusAsal.value = UNIDA;
+    kampusAsal.classList.add("bg-blue-50", "border-blue-300");
+    kampusTujuan.value = "";
+  } else if (typeProgram === "inbound") {
+    // Inbound: Dari Luar → UNIDA
+    kampusTujuan.value = UNIDA;
+    kampusTujuan.classList.add("bg-blue-50", "border-blue-300");
+    kampusAsal.value = "";
+  } else if (typeProgram === "virtual") {
+    // Virtual: kedua field bisa diisi manual
+    kampusAsal.value = "";
+    kampusTujuan.value = "";
+  }
+}
+
 // === DOWNLOAD FILE === //
 function getMobilityExportData() {
   return filteredMobilityData || mobilityPrograms;
