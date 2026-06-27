@@ -28,6 +28,8 @@ async function initMobility() {
   initMobilityCalendar();
   renderMobilityTable(1);
   updateMobilityStats();
+  // 🔥 Inisialisasi indikator filter
+  updateFilterIndicator();
 }
 /* ===============================
    LOAD DATA
@@ -807,26 +809,36 @@ function getGoogleDriveImageUrlMobility(driveUrl) {
   return null;
 }
 // Render mobility table
-// Render mobility table
-function renderMobilityTable(page = 1, data = mobilityPrograms) {
+function renderMobilityTable(page = 1, data = null) {
   const tbody = document.getElementById("mobilityTableBody");
   if (!tbody) return;
 
   currentMobilityPage = page;
+  
+  // 🔥 Gunakan data yang sudah difilter jika ada, atau semua data
+  const dataToShow = data || filteredMobilityData || mobilityPrograms;
 
   const start = (page - 1) * mobilityItemsPerPage;
   const end = start + mobilityItemsPerPage;
-  const paginatedData = data.slice(start, end);
+  const paginatedData = dataToShow.slice(start, end);
 
   if (!paginatedData.length) {
     tbody.innerHTML = `
       <tr>
         <td colspan="7" class="text-center py-6 text-gray-400">
-          Tidak ada data ditemukan
+          <div class="flex flex-col items-center gap-2">
+            <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p>Tidak ada data ditemukan</p>
+            <button onclick="resetMobilityFilters()" class="text-xs text-blue-600 hover:underline">
+              Reset Filter
+            </button>
+          </div>
         </td>
       </tr>
     `;
-    renderMobilityPagination(data.length);
+    renderMobilityPagination(dataToShow.length);
     return;
   }
 
@@ -835,7 +847,7 @@ function renderMobilityTable(page = 1, data = mobilityPrograms) {
       (p) => `
     <tr class="hover:bg-blue-50/30 transition">
       <td class="px-4 py-3 font-medium">${p.nama}</td>
-      <td class="px-4 py-3 capitalize">${p.jenis || "-"}</td>
+      <td class="px-4 py-3 capitalize">${formatJenisLabel(p.jenis) || "-"}</td>
       <td class="px-4 py-3">${p.kampus}</td>
       <td class="px-4 py-3 text-xs">${p.tahunMasuk} - ${p.tahunKeluar}</td>
       <td class="px-4 py-3">${p.masaStudy || "-"}</td>
@@ -878,7 +890,20 @@ function renderMobilityTable(page = 1, data = mobilityPrograms) {
     )
     .join("");
 
-  renderMobilityPagination(data.length);
+  renderMobilityPagination(dataToShow.length);
+}
+
+// 🔥 Helper untuk format label jenis program
+function formatJenisLabel(jenis) {
+  const labels = {
+    'exchange': 'Student Exchange',
+    'short_course': 'Short Course',
+    'internship': 'Internship',
+    'research': 'Research',
+    'double_degree': 'Double Degree',
+    'other': 'Lainnya'
+  };
+  return labels[jenis] || jenis;
 }
 // === FILTER TABLE === //
 function filterMobilityTable() {
@@ -897,6 +922,103 @@ function filterMobilityTable() {
   );
 
   renderMobilityTable(1, filteredMobilityData);
+}
+/* ===============================
+   FILTER PER KOLOM - MOBILITY
+================================= */
+
+// 🔥 Fungsi utama untuk menerapkan semua filter
+function applyMobilityFilters() {
+  // Ambil nilai semua filter
+  const nama = document.getElementById("filter-nama")?.value.toLowerCase().trim() || "";
+  const jenis = document.getElementById("filter-jenis")?.value || "";
+  const mitra = document.getElementById("filter-mitra")?.value.toLowerCase().trim() || "";
+  const periodeFrom = document.getElementById("filter-periode-from")?.value || "";
+  const periodeTo = document.getElementById("filter-periode-to")?.value || "";
+  const masa = document.getElementById("filter-masa")?.value.toLowerCase().trim() || "";
+  const status = document.getElementById("filter-status")?.value || "";
+  
+  // Filter data
+  filteredMobilityData = mobilityPrograms.filter((p) => {
+    // Filter Nama
+    if (nama && !p.nama.toLowerCase().includes(nama)) return false;
+    
+    // Filter Jenis
+    if (jenis && p.jenis !== jenis) return false;
+    
+    // Filter Mitra/Kampus
+    if (mitra && !p.kampus.toLowerCase().includes(mitra)) return false;
+    
+    // Filter Periode (date range)
+    if (periodeFrom || periodeTo) {
+      const startDate = p.startISO; // format YYYY-MM-DD
+      if (periodeFrom && startDate < periodeFrom) return false;
+      if (periodeTo && startDate > periodeTo) return false;
+    }
+    
+    // Filter Masa Studi
+    if (masa && !p.masaStudy.toLowerCase().includes(masa)) return false;
+    
+    // Filter Status/Type
+    if (status && p.type !== status) return false;
+    
+    return true;
+  });
+  
+  // Update indikator filter aktif
+  updateFilterIndicator();
+  
+  // Render tabel dengan data yang sudah difilter
+  renderMobilityTable(1, filteredMobilityData);
+}
+
+// 🔥 Fungsi untuk reset semua filter
+function resetMobilityFilters() {
+  // Reset semua input filter
+  const filters = [
+    "filter-nama", 
+    "filter-jenis", 
+    "filter-mitra", 
+    "filter-periode-from", 
+    "filter-periode-to", 
+    "filter-masa", 
+    "filter-status"
+  ];
+  
+  filters.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  
+  // Reset filtered data
+  filteredMobilityData = null;
+  
+  // Hide indikator
+  updateFilterIndicator();
+  
+  // Render ulang tabel dengan semua data
+  renderMobilityTable(1, mobilityPrograms);
+}
+
+// 🔥 Update indikator filter aktif (titik biru berkedip)
+function updateFilterIndicator() {
+  const indicator = document.getElementById("filterIndicator");
+  if (!indicator) return;
+  
+  const hasFilter = 
+    (document.getElementById("filter-nama")?.value || "") !== "" ||
+    (document.getElementById("filter-jenis")?.value || "") !== "" ||
+    (document.getElementById("filter-mitra")?.value || "") !== "" ||
+    (document.getElementById("filter-periode-from")?.value || "") !== "" ||
+    (document.getElementById("filter-periode-to")?.value || "") !== "" ||
+    (document.getElementById("filter-masa")?.value || "") !== "" ||
+    (document.getElementById("filter-status")?.value || "") !== "";
+  
+  if (hasFilter) {
+    indicator.classList.remove("hidden");
+  } else {
+    indicator.classList.add("hidden");
+  }
 }
 // Upcoming events sidebar
 function renderUpcomingEvents() {
