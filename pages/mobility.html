@@ -67,51 +67,136 @@
   </div>
 
   <!-- ✅ Mobility Table Container -->
-  <div class="bg-white rounded-xl shadow">
-    <!-- Header -->
-    <div class="p-4 border-b flex flex-col gap-4">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <h3 class="font-semibold text-gray-700">📋 Daftar Program Mobilitas</h3>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="downloadMobilityCSV()" class="btn-export btn-green">📄 CSV</button>
-          <button onclick="downloadMobilityExcel()" class="btn-export btn-blue">📊 Excel</button>
-          <button onclick="downloadMobilityPDF()" class="btn-export btn-red">📑 PDF</button>
-          <button onclick="showMobilityForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">➕ Tambah Program</button>
-        </div>
-      </div>
-
-      <!-- Search -->
-      <div class="flex justify-start">
-        <div class="relative w-full md:w-96">
-          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">🔎</span>
-          <input type="text" id="mobilitySearch" placeholder="Cari nama, jenis, kampus, atau negara..." onkeyup="filterMobilityTable()" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"/>
-        </div>
+<div class="bg-white rounded-xl shadow">
+  <!-- Header -->
+  <div class="p-4 border-b flex flex-col gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <h3 class="font-semibold text-gray-700">📋 Daftar Program Mobilitas</h3>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="downloadMobilityCSV()" class="btn-export btn-green">📄 CSV</button>
+        <button onclick="downloadMobilityExcel()" class="btn-export btn-blue">📊 Excel</button>
+        <button onclick="downloadMobilityPDF()" class="btn-export btn-red">📑 PDF</button>
+        <button onclick="showMobilityForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">➕ Tambah Program</button>
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wide">
-          <tr>
-            <th class="px-4 py-3 text-left">Nama Peserta</th>
-            <th class="px-4 py-3 text-left">Jenis</th>
-            <th class="px-4 py-3 text-left">Mitra</th>
-            <th class="px-4 py-3 text-left">Periode</th>
-            <th class="px-4 py-3 text-left">Masa Studi</th>
-            <th class="px-4 py-3 text-left">Status</th>
-            <th class="px-4 py-3 text-left">Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="mobilityTableBody" class="divide-y divide-gray-100"></tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="p-4 border-t flex justify-center bg-gray-50">
-      <div id="mobilityPagination" class="flex gap-2 flex-wrap"></div>
+    <!-- 🔥 Tombol Reset Filter -->
+    <div class="flex justify-end">
+      <button onclick="resetMobilityFilters()" 
+              class="group relative inline-flex items-center gap-2 px-4 py-2 text-gray-600 text-xs font-medium 
+                     hover:text-blue-600 hover:bg-blue-50 
+                     focus:outline-none focus:ring-2 focus:ring-blue-400 
+                     rounded-lg transition-all duration-200">
+        <span class="relative">
+          <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" 
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span id="filterIndicator" class="absolute -top-1 -right-1 flex h-2 w-2 hidden">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+          </span>
+        </span>
+        <span>Reset Filter</span>
+      </button>
     </div>
   </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wide">
+        <!-- Header Utama -->
+        <tr>
+          <th class="px-4 py-3 text-left">Nama Peserta</th>
+          <th class="px-4 py-3 text-left">Jenis</th>
+          <th class="px-4 py-3 text-left">Mitra</th>
+          <th class="px-4 py-3 text-left">Periode</th>
+          <th class="px-4 py-3 text-left">Masa Studi</th>
+          <th class="px-4 py-3 text-left">Status</th>
+          <th class="px-4 py-3 text-left">Aksi</th>
+        </tr>
+        
+        <!-- 🔥 BARIS FILTER PER KOLOM -->
+        <tr class="bg-blue-50/50 border-t">
+          <!-- Nama Peserta - TEXT SEARCH -->
+          <th class="p-2">
+            <input type="text" id="filter-nama" 
+                   placeholder="Cari nama..." 
+                   class="w-full text-xs px-2 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition placeholder-gray-400" 
+                   onkeyup="applyMobilityFilters()">
+          </th>
+          
+          <!-- Jenis - DROPDOWN -->
+          <th class="p-2">
+            <select id="filter-jenis" 
+                    class="w-full text-xs px-2 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition" 
+                    onchange="applyMobilityFilters()">
+              <option value="">Semua Jenis</option>
+              <option value="exchange">Student Exchange</option>
+              <option value="short_course">Short Course</option>
+              <option value="internship">Internship</option>
+              <option value="research">Research</option>
+              <option value="double_degree">Double Degree</option>
+              <option value="other">Lainnya</option>
+            </select>
+          </th>
+          
+          <!-- Mitra/Kampus - TEXT SEARCH -->
+          <th class="p-2">
+            <input type="text" id="filter-mitra" 
+                   placeholder="Cari mitra..." 
+                   class="w-full text-xs px-2 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition placeholder-gray-400" 
+                   onkeyup="applyMobilityFilters()">
+          </th>
+          
+          <!-- Periode - DATE RANGE -->
+          <th class="p-2">
+            <div class="flex items-center gap-1">
+              <input type="date" id="filter-periode-from" 
+                     class="w-full text-[10px] sm:text-xs px-1.5 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition min-w-[70px]" 
+                     onchange="applyMobilityFilters()">
+              <span class="text-gray-400 text-[10px] font-medium">-</span>
+              <input type="date" id="filter-periode-to" 
+                     class="w-full text-[10px] sm:text-xs px-1.5 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition min-w-[70px]" 
+                     onchange="applyMobilityFilters()">
+            </div>
+          </th>
+          
+          <!-- Masa Studi - TEXT SEARCH -->
+          <th class="p-2">
+            <input type="text" id="filter-masa" 
+                   placeholder="Masa studi..." 
+                   class="w-full text-xs px-2 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition placeholder-gray-400" 
+                   onkeyup="applyMobilityFilters()">
+          </th>
+          
+          <!-- Status/Type - DROPDOWN -->
+          <th class="p-2">
+            <select id="filter-status" 
+                    class="w-full text-xs px-2 py-1.5 border border-gray-300 rounded bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none transition" 
+                    onchange="applyMobilityFilters()">
+              <option value="">Semua Status</option>
+              <option value="outbound">Outbound</option>
+              <option value="inbound">Inbound</option>
+              <option value="virtual">Virtual</option>
+            </select>
+          </th>
+          
+          <!-- Aksi Column - Empty -->
+          <th class="p-2 sticky right-0 bg-blue-50/50 z-20"></th>
+        </tr>
+      </thead>
+      <tbody id="mobilityTableBody" class="divide-y divide-gray-100"></tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="p-4 border-t flex justify-center bg-gray-50">
+    <div id="mobilityPagination" class="flex gap-2 flex-wrap"></div>
+  </div>
+</div>
 </div>
 <!-- ✅ END Mobilitas Internasional Content -->
 
